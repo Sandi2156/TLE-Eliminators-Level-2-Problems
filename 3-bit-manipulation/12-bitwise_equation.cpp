@@ -40,13 +40,13 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-void func(int n) {
+void func(ll n) {
     ll d = n + ((1LL << 35) + (1LL << 36));
     ll c = (1LL << 35);
     ll b = (1LL << 36);
     ll a = ((1LL << 36) + (1LL << 37));
 
-    cout<<a<<" "<<b<<" "<<c<<" "<<d<<" "<<(((a&b)|c)^d)<<endl;
+    cout<<a<<" "<<b<<" "<<c<<" "<<d<<endl;
 }
 
 void solve() {
@@ -54,7 +54,7 @@ void solve() {
     cin>>t;
 
     while(t--) {
-        int n; 
+        ll n; 
         cin>>n;
 
         func(n);
