@@ -47,14 +47,13 @@ void calculateTeleporters(ll n, ll c, vector<ll> &arr) {
     }
 
     sort(costs.begin(), costs.end());
-    
-    ll cnt = 0;
-    for(int i = 0; i < n && c >= costs[i]; i++) {
-        c -= costs[i];
-        cnt++;
+
+    ll i = 0;
+    while(i < n && c >= costs[i]) {
+        c -= costs[i++];
     }
 
-    cout<<cnt<<endl;
+    cout<<i<<endl;
 }
 
 void solve() {
