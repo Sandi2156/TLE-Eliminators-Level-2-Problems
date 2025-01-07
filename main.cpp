@@ -1,10 +1,3 @@
-/*
-    Hint:
-    1. If I divide num by 2^k then
-        num % 2^k => last k digits of num
-
-*/
-
 #include <bits/stdc++.h>  // This will work only for g++ compiler.
 
 #define for0(i, n) for (int i = 0; i < (int)(n); ++i) // 0 based indexing
@@ -17,6 +10,7 @@
 #define pb push_back
 #define fi first
 #define se second
+#define ln "\n"
 
 // to be used with algorithms that processes a container Eg: find(all(c),42)
 #define all(x) (x).begin(), (x).end() // Forward traversal
@@ -48,45 +42,31 @@ typedef vector<vll> vvll;
 typedef double ld;
 
 
-void func(int n, vector<ll> &arr) {
-    vector<ll> bits(63, 0);
+void solve() {
+    ll x;
+    cin>>x;
 
-    for(auto &num: arr) {
+    ll countTilNow = 0, noOfBacteria = 0;
 
-        for(int i = 1; i <= 62; i++) {
-            if((1LL << (i-1)) & num) bits[i]++;
+    while(true) {
+        ll days = 0;
+        noOfBacteria++;
+        while((countTilNow + (1LL << days)) < x) {
+            days++;
         }
-    }
-
-    for(int i = 1; i <= 62; i++) {
-        if(bits[i] != n && bits[i] != 0) {
-            cout<<(ll)pow(2LL, i)<<endl;
+        if((countTilNow + (1LL << days)) == x) {
             break;
         }
+        countTilNow += (1LL << (days - 1));
     }
-}
-
-void solve() {
-    int t;
-    cin>>t;
-
-    while(t--) {
-        int n;
-        cin>>n;
-        vector<ll> arr(n);
-        for(auto &it: arr) cin>>it;
-
-        func(n, arr);
-    }
-
-
-
+    
+    cout<<noOfBacteria<<ln;
 }
 
 
 int main() {
     ios::sync_with_stdio(false);
-    cin.tie(0);
+    cin.tie(nullptr);
     cout.precision(10);
     cout << fixed;
     solve();
