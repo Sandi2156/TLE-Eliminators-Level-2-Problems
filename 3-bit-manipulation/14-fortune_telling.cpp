@@ -1,3 +1,10 @@
+/*
+    1. The main difference between x and x+3 is parity
+    2. we have initial number x
+        i. if we + or ^ with odd parity of x changes
+        ii. if we + or ^ with even parity remains same
+*/
+
 #include <bits/stdc++.h>  // This will work only for g++ compiler.
 
 #define for0(i, n) for (int i = 0; i < (int)(n); ++i) // 0 based indexing

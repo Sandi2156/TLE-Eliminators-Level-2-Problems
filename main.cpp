@@ -47,26 +47,24 @@ void solve() {
     cin>>t;
 
     while(t--) {
-        ll n, k;
-        cin>>n>>k;
+        ll n, x, y;
+        cin>>n>>x>>y;
 
         vector<ll> arr(n);
         for(auto &it: arr) cin>>it;
 
-        vector<ll> freqArr(32, 0);
-        for(int i = 0; i < 32; i++) {
-            for(auto it: arr) {
-                if(it & (1 << i)) freqArr[i]++;
-            }
-        }
+        ll i = 1;
+        for(auto it: arr)
+            if(it & 1) i = i ? 0 : 1;
 
-        ll ans = 0;
-        for(int i = 0; i < 32; i++) {
-            ans += (freqArr[i] / k);
-            if(freqArr[i] % k) ans++;
+        if(i) { // parity remains same after operations with all the array members
+            if( (x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1) ) cout<<"Alice";
+            else cout<<"Bob";
+        } else {
+            if( (x % 2 == 0 && y % 2 == 1) || (x % 2 == 1 && y % 2 == 0) ) cout<<"Alice";
+            else cout<<"Bob";
         }
-
-        cout<<ans<<ln;
+        cout<<ln;
     }
 }
 
