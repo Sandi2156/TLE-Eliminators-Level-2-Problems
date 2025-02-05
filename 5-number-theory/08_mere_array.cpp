@@ -42,28 +42,6 @@ typedef vector<vll> vvll;
 typedef double ld;
 
 
-ll func(ll n, vector<vector<ll>> &arr) {
-
-    vector<ll> freq(n, 0);
-    for(ll i = 0; i < n; i++) {
-        for(ll j = n-1; j >= 0; j--) {
-            if(arr[i][j] == 1) freq[i]++;
-            else break;
-        }
-    }
-
-    sort(freq.begin(), freq.end());
-
-    ll i = 0, p = 0;
-    while(i < n) {
-        while(i < n && freq[i] < p) i++;
-        if(i == n) break;
-        p++;
-        i++;
-    }
-    return p;
-}
-
 void solve() {
     ll t;
     cin>>t;
@@ -72,12 +50,35 @@ void solve() {
         ll n;
         cin>>n;
 
-        vector<vector<ll>> arr(n, vector<ll>(n));
-        for(int i = 0; i < n; i++)
-            for(int j = 0; j < n; j++)
-                cin>>arr[i][j];
-            
-        cout<<func(n, arr)<<ln;
+        vector<ll> arr(n);
+        for(auto &it: arr) cin>>it;
+
+        vector<ll> pArr;
+        ll mini = INT_MAX;
+
+        for(auto it: arr) mini = min(mini, it);
+
+        for(auto it: arr) if(it % mini == 0) pArr.push_back(it);
+
+        sort(pArr.begin(), pArr.end());
+
+        int j = 0;
+        for(int i = 0; i < n; i++) {
+            if(arr[i] % mini == 0) {
+                arr[i] = pArr[j];
+                j++;
+            }
+        } 
+
+        bool isPossible = true;
+        for(int i = 1; i < n; i++) {
+            if(arr[i] < arr[i-1]) {
+                isPossible = false;
+                break;
+            }
+        }
+
+        cout<<(isPossible ? "YES" : "NO")<<ln;
     }
 }
 

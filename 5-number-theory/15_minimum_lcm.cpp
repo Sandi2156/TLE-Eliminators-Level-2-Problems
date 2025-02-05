@@ -42,28 +42,6 @@ typedef vector<vll> vvll;
 typedef double ld;
 
 
-ll func(ll n, vector<vector<ll>> &arr) {
-
-    vector<ll> freq(n, 0);
-    for(ll i = 0; i < n; i++) {
-        for(ll j = n-1; j >= 0; j--) {
-            if(arr[i][j] == 1) freq[i]++;
-            else break;
-        }
-    }
-
-    sort(freq.begin(), freq.end());
-
-    ll i = 0, p = 0;
-    while(i < n) {
-        while(i < n && freq[i] < p) i++;
-        if(i == n) break;
-        p++;
-        i++;
-    }
-    return p;
-}
-
 void solve() {
     ll t;
     cin>>t;
@@ -72,12 +50,31 @@ void solve() {
         ll n;
         cin>>n;
 
-        vector<vector<ll>> arr(n, vector<ll>(n));
-        for(int i = 0; i < n; i++)
-            for(int j = 0; j < n; j++)
-                cin>>arr[i][j];
-            
-        cout<<func(n, arr)<<ln;
+        ll lcm = INT_MAX, ans_a, ans_b;
+        for(ll i = 1; i * i <= n; i++) {
+            if(n % i == 0) {
+                ll a = i;
+                ll b = n - a;
+                if(a > b) swap(a, b);
+
+                if(b % a == 0 && b < lcm) {
+                    lcm = b;
+                    ans_a = a;
+                    ans_b = b;
+                } 
+
+                b = n / i;
+                a = n - b;
+                if(a == 0) continue;
+                if(a > b) swap(a, b);
+                if(b % a == 0 && b < lcm) {
+                    lcm = b;
+                    ans_a = a;
+                    ans_b = b;
+                }
+            }
+        }
+        cout<<ans_a<<" "<<ans_b<<ln;
     }
 }
 

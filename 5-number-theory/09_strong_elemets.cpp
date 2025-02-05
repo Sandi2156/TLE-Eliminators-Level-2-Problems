@@ -42,28 +42,6 @@ typedef vector<vll> vvll;
 typedef double ld;
 
 
-ll func(ll n, vector<vector<ll>> &arr) {
-
-    vector<ll> freq(n, 0);
-    for(ll i = 0; i < n; i++) {
-        for(ll j = n-1; j >= 0; j--) {
-            if(arr[i][j] == 1) freq[i]++;
-            else break;
-        }
-    }
-
-    sort(freq.begin(), freq.end());
-
-    ll i = 0, p = 0;
-    while(i < n) {
-        while(i < n && freq[i] < p) i++;
-        if(i == n) break;
-        p++;
-        i++;
-    }
-    return p;
-}
-
 void solve() {
     ll t;
     cin>>t;
@@ -72,12 +50,30 @@ void solve() {
         ll n;
         cin>>n;
 
-        vector<vector<ll>> arr(n, vector<ll>(n));
-        for(int i = 0; i < n; i++)
-            for(int j = 0; j < n; j++)
-                cin>>arr[i][j];
-            
-        cout<<func(n, arr)<<ln;
+        vector<ll> arr(n);
+        for(auto &val: arr) cin>>val;
+
+        if(n == 1) {
+            cout<<1<<ln;
+            continue;
+        }
+
+        vector<ll> suffixGcd(n);
+        for(ll i = n-1; i >= 0; i--) {
+            if(i == n-1) suffixGcd[i] = arr[i];
+            else suffixGcd[i] = __gcd(arr[i], suffixGcd[i+1]);
+        }
+
+        ll ans = 0, prefixGcd = arr[0];
+        for(int i = 1; i < n-1; i++) {
+            if(__gcd(prefixGcd, suffixGcd[i+1]) != 1) ans++;
+            prefixGcd = __gcd(prefixGcd, arr[i]);
+        }
+
+        if(suffixGcd[1] != 1) ans++;
+        if(prefixGcd != 1) ans++;
+
+        cout<<ans<<ln;
     }
 }
 

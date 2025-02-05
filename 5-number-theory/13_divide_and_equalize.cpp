@@ -42,28 +42,6 @@ typedef vector<vll> vvll;
 typedef double ld;
 
 
-ll func(ll n, vector<vector<ll>> &arr) {
-
-    vector<ll> freq(n, 0);
-    for(ll i = 0; i < n; i++) {
-        for(ll j = n-1; j >= 0; j--) {
-            if(arr[i][j] == 1) freq[i]++;
-            else break;
-        }
-    }
-
-    sort(freq.begin(), freq.end());
-
-    ll i = 0, p = 0;
-    while(i < n) {
-        while(i < n && freq[i] < p) i++;
-        if(i == n) break;
-        p++;
-        i++;
-    }
-    return p;
-}
-
 void solve() {
     ll t;
     cin>>t;
@@ -72,12 +50,33 @@ void solve() {
         ll n;
         cin>>n;
 
-        vector<vector<ll>> arr(n, vector<ll>(n));
-        for(int i = 0; i < n; i++)
-            for(int j = 0; j < n; j++)
-                cin>>arr[i][j];
-            
-        cout<<func(n, arr)<<ln;
+        vector<ll> arr(n);
+        for(auto &it: arr) cin>>it;
+
+        map<ll, ll> freqMap;
+        for(auto it: arr) {
+            // prime factorization using division
+            ll num = it;
+            for(ll i = 2; i * i <= num; i++) {
+                if(num % i == 0) {
+                    while(num % i == 0) {
+                        freqMap[i]++;
+                        num /= i;
+                    }
+                }
+            }
+            if(num > 1) freqMap[num]++;
+        }
+
+        bool isPossible = true;
+        for(auto it: freqMap) {
+            // cout<<it.first<<" "<<it.second<<ln;
+            if(it.second % n != 0) {
+                isPossible = false;
+                break;
+            }
+        }
+        cout<<(isPossible ? "YES" : "NO")<<ln;
     }
 }
 

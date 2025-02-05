@@ -42,42 +42,43 @@ typedef vector<vll> vvll;
 typedef double ld;
 
 
-ll func(ll n, vector<vector<ll>> &arr) {
-
-    vector<ll> freq(n, 0);
-    for(ll i = 0; i < n; i++) {
-        for(ll j = n-1; j >= 0; j--) {
-            if(arr[i][j] == 1) freq[i]++;
-            else break;
-        }
-    }
-
-    sort(freq.begin(), freq.end());
-
-    ll i = 0, p = 0;
-    while(i < n) {
-        while(i < n && freq[i] < p) i++;
-        if(i == n) break;
-        p++;
-        i++;
-    }
-    return p;
-}
-
 void solve() {
     ll t;
     cin>>t;
 
-    while(t--) {
-        ll n;
-        cin>>n;
+    ll n = 1e6;
+    vector<bool> isPrime(n, true);
+    for(ll i = 2; i * i <= n; i++) {
+        if(!isPrime[i]) continue;
+        for(ll j = i * i; j <= n; j += i) {
+            isPrime[j] = false;
+        }
+    }
 
-        vector<vector<ll>> arr(n, vector<ll>(n));
-        for(int i = 0; i < n; i++)
-            for(int j = 0; j < n; j++)
-                cin>>arr[i][j];
-            
-        cout<<func(n, arr)<<ln;
+    set<ll> primes;
+    for(ll i = 2; i <= n; i++) {
+        if(isPrime[i]){
+             primes.insert(i);
+        }
+    }
+
+    while(t--) {
+        ll d;
+        cin>>d;
+
+        ll p = 1, q  = -1, r = -1;
+        for(auto it: primes) {
+            if(q != -1 && r != -1) break;
+            if(it - p >= d) {
+                if(q == -1) {
+                    q = it;
+                    p = it;
+                }
+                else r = it;
+            }
+        }
+
+        cout<<q * r<<ln;
     }
 }
 
