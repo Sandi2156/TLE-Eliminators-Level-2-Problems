@@ -42,43 +42,32 @@ typedef vector<vll> vvll;
 typedef double ld;
 
 
-ll func(ll n, vector<vector<ll>> &arr) {
-
-    vector<ll> freq(n, 0);
-    for(ll i = 0; i < n; i++) {
-        for(ll j = n-1; j >= 0; j--) {
-            if(arr[i][j] == 1) freq[i]++;
-            else break;
-        }
-    }
-
-    sort(freq.begin(), freq.end());
-
-    ll i = 0, p = 0;
-    while(i < n) {
-        while(i < n && freq[i] < p) i++;
-        if(i == n) break;
-        p++;
-        i++;
-    }
-    return p;
-}
-
 void solve() {
-    ll t;
-    cin>>t;
+    ll n;
+    cin>>n;
 
-    while(t--) {
-        ll n;
-        cin>>n;
+    map<ll, ll> primeFreqMap;
 
-        vector<vector<ll>> arr(n, vector<ll>(n));
-        for(int i = 0; i < n; i++)
-            for(int j = 0; j < n; j++)
-                cin>>arr[i][j];
-            
-        cout<<func(n, arr)<<ln;
+    for(ll i = 2; i <= n; i++) {
+        ll num = i;
+        for(ll j = 2; j * j <= num; j++) {
+            if(num % j == 0) {
+                while(num % j == 0) {
+                    primeFreqMap[j]++;
+                    num /= j;
+                }
+            }
+        }
+        if(num > 1) primeFreqMap[num]++;
     }
+
+    ll ans = 1;
+    for(auto it: primeFreqMap) {
+        ans *= (it.second + 1);
+        ans %= 1000000007;
+    }
+
+    cout<<ans<<ln;
 }
 
 
