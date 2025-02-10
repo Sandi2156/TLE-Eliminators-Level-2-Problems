@@ -46,27 +46,33 @@ void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-       ll n, k;
-       cin>>n>>k;
-
-       vector<ll> arr(n);
-       for(auto &it: arr) cin>>it;
-
-       if(k > 1) cout<<"YES";
-       else {
-            bool isYes = true;
-            for(int i = 1; i < n; i++) {
-                if(arr[i] < arr[i-1]) {
-                    isYes = false;
-                    break;
+        ll n, k, x;
+        cin>>n>>k>>x;
+        
+        if(x == 1) {
+            if(n == 1 || k == 1) cout<<"NO"<<ln;
+            else if(k == 2 && n % 2 != 0) cout<<"NO"<<ln;
+            else {
+                cout<<"YES"<<ln;
+                vector<ll> ans;
+                while(n > 3) {
+                    ans.push_back(2);
+                    n -= 2;
                 }
+                ans.push_back(n);
+                cout<<ans.size()<<ln;
+                for(auto it: ans) cout<<it<<" ";
+                cout<<ln;
             }
-            cout<<(isYes ? "YES": "NO");
-       }
-       cout<<ln;
+        } else {
+            cout<<"YES"<<ln;
+            cout<<n<<ln;
+            while(n--) cout<<1<<" ";
+            cout<<ln;
+        }
    }
-   //TC: O()
-   //SC: O()
+   //TC: O(n)
+   //SC: O(logn)
 }
 
 
