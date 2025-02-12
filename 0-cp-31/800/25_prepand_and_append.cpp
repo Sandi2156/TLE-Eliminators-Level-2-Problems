@@ -48,17 +48,18 @@ void solve() {
    while(t--) {
         ll n;
         cin>>n;
+        string s;
+        cin>>s;
 
-        vector<ll> arr(n);
-        for(auto &it: arr) cin>>it;
-
-        ll p = n + 1;
-        for(int i = 0; i < n; i++) {
-            cout<<(p - arr[i])<<" ";
+        ll i = 0, j = n - 1;
+        while(i < j) {
+            if(s[i] != s[j]) i++,j--;
+            else break;
         }
-        cout<<ln;
+        if(i > j) cout<<0<<ln;
+        else cout<<j-i+1<<ln;
    }
-   //TC: O(n)
+   //TC: O(n/2)
    //SC: O(1)
 }
 

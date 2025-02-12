@@ -52,13 +52,28 @@ void solve() {
         vector<ll> arr(n);
         for(auto &it: arr) cin>>it;
 
-        ll p = n + 1;
-        for(int i = 0; i < n; i++) {
-            cout<<(p - arr[i])<<" ";
+        vector<ll> freq(8, 0);
+        for(int i = 0; i < 8; i++) {
+            for(auto it: arr) {
+                if(it & (1 << i)) freq[i]++;
+            }
         }
-        cout<<ln;
+
+        ll ans = 0;
+        bool isPossible = true;
+        for(int i = 0; i < 8; i++) {
+            if((freq[i] & 1) == 0) continue;
+            if(((n - freq[i]) & 1) == 0) {
+                ans |= (1 << i);
+                continue;
+            }
+            isPossible = false;
+            break;
+        }
+        if(isPossible) cout<<ans<<ln;
+        else cout<<-1<<ln;
    }
-   //TC: O(n)
+   //TC: O(8 * n)
    //SC: O(1)
 }
 

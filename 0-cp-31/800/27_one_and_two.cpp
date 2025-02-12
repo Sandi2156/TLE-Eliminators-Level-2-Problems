@@ -52,11 +52,29 @@ void solve() {
         vector<ll> arr(n);
         for(auto &it: arr) cin>>it;
 
-        ll p = n + 1;
-        for(int i = 0; i < n; i++) {
-            cout<<(p - arr[i])<<" ";
+        ll freqTwos = 0;
+        for(auto it: arr) freqTwos += (it == 2);
+
+        if(freqTwos & 1) {
+            cout<<-1<<ln;
+            continue;
         }
-        cout<<ln;
+        if(freqTwos == 0) {
+            cout<<1<<ln;
+            continue;
+        }
+
+        ll tmp = freqTwos >> 1;
+        ll cnt = 0;
+        ll ans = 0;
+        for(int i = 0; i < n; i++) {
+            cnt += (arr[i] == 2);
+            if(cnt == tmp) {
+                ans = i;
+                break;
+            }
+        }
+        cout<<ans+1<<ln;
    }
    //TC: O(n)
    //SC: O(1)

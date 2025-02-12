@@ -52,14 +52,24 @@ void solve() {
         vector<ll> arr(n);
         for(auto &it: arr) cin>>it;
 
-        ll p = n + 1;
-        for(int i = 0; i < n; i++) {
-            cout<<(p - arr[i])<<" ";
+        map<ll, ll> mp;
+        for(auto it: arr) mp[it]++;
+
+        while(!mp.empty()) {
+            auto it = *(mp.begin());
+            if(it.second == 1) {
+                break;
+            }
+            if(it.second > 2)
+                mp[it.first + 1] += (it.second - 2);
+            mp.erase(it.first);
         }
-        cout<<ln;
+
+        if(mp.empty()) cout<<"YES"<<ln;
+        else cout<<"NO"<<ln;
    }
-   //TC: O(n)
-   //SC: O(1)
+   //TC: O()
+   //SC: O()
 }
 
 

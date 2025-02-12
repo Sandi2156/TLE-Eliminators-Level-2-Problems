@@ -46,19 +46,25 @@ void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        ll n;
-        cin>>n;
+        ll a, b, c, d;
+        cin>>a>>b>>c>>d;
 
-        vector<ll> arr(n);
-        for(auto &it: arr) cin>>it;
-
-        ll p = n + 1;
-        for(int i = 0; i < n; i++) {
-            cout<<(p - arr[i])<<" ";
+        if(d - b < 0) {
+            cout<<-1<<ln;
+        } else if(a + d - b < c) {
+            cout<<-1<<ln;
+        } else {
+            ll ans = 0;
+            ll up = d - b;
+            if(c < a) {
+                ans = abs(c - a);
+                a = c;
+            }
+            ans += abs(c - up - a) + up;
+            cout<<ans<<ln;
         }
-        cout<<ln;
    }
-   //TC: O(n)
+   //TC: O(1)
    //SC: O(1)
 }
 

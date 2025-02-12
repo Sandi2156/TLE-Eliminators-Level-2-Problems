@@ -52,13 +52,20 @@ void solve() {
         vector<ll> arr(n);
         for(auto &it: arr) cin>>it;
 
-        ll p = n + 1;
+        bool isBeautiful = false;
         for(int i = 0; i < n; i++) {
-            cout<<(p - arr[i])<<" ";
+            for(int j = i+1; j < n; j++) {
+                if(__gcd(arr[i], arr[j]) <= 2) {
+                    isBeautiful = true;
+                    break;
+                }
+            }
+            if(isBeautiful) break;
         }
-        cout<<ln;
+
+        cout<<(isBeautiful ? "YES" : "NO")<<ln;
    }
-   //TC: O(n)
+   //TC: O(n^2log(maxi))
    //SC: O(1)
 }
 

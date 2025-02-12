@@ -46,20 +46,14 @@ void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        ll n;
-        cin>>n;
+       ll n, k;
+       cin>>n>>k;
 
-        vector<ll> arr(n);
-        for(auto &it: arr) cin>>it;
-
-        ll p = n + 1;
-        for(int i = 0; i < n; i++) {
-            cout<<(p - arr[i])<<" ";
-        }
-        cout<<ln;
+       if(n % 2 == 0 || (n - k) % 2 == 0) cout<<"YES"<<ln;
+       else cout<<"NO"<<ln;
    }
-   //TC: O(n)
-   //SC: O(1)
+   //TC: O()
+   //SC: O()
 }
 
 

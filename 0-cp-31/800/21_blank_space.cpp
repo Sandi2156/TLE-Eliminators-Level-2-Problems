@@ -48,18 +48,26 @@ void solve() {
    while(t--) {
         ll n;
         cin>>n;
-
         vector<ll> arr(n);
-        for(auto &it: arr) cin>>it;
+        for(auto &val: arr) cin>>val;
 
-        ll p = n + 1;
-        for(int i = 0; i < n; i++) {
-            cout<<(p - arr[i])<<" ";
+        int ans = 0;
+        int i = 0;
+        while(i < n) {
+            if(arr[i] == 0) {
+                int cnt = 0;
+                while(i < n && arr[i] == 0) {
+                    i++;
+                    cnt++;
+                }
+                ans = max(ans, cnt);
+            } 
+            i++;
         }
-        cout<<ln;
+        cout<<ans<<ln;
    }
-   //TC: O(n)
-   //SC: O(1)
+   //TC: O()
+   //SC: O()
 }
 
 
