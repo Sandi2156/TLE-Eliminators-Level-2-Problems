@@ -41,13 +41,6 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-bool containsSeven(ll num) {
-    while(num > 0) {
-        if(num % 10 == 7) return true;
-        num /= 10;
-    }
-    return false;
-}
 
 void solve() {
    ll t = 1;
@@ -55,25 +48,19 @@ void solve() {
    while(t--) {
         ll n;
         cin>>n;
-        ll ans = 7;
 
-        bool found = false;
-        for(int i = 0; i < 10; i++) {
-            ll p = n - i;
-            ll toAdd = 1;
-            while(toAdd <= 1e9) {
-                if(containsSeven(p + (i * toAdd))) {
-                    cout<<i<<ln;
-                    found = true;
-                    break;
-                }
-                toAdd *= 10;
-            }
-            if(found) break;
+        ll gap = 1, ans = 0, cur = 1;
+        while(cur <= n) {
+            ans++;
+            cur += gap;
+
+            if(cur == gap * 10) gap *= 10;
         }
+
+        cout<<ans<<ln;
    }
-   //TC: O()
-   //SC: O()
+   //TC: O(t * 100)
+   //SC: O(1)
 }
 
 

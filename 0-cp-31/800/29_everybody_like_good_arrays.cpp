@@ -41,39 +41,55 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-bool containsSeven(ll num) {
-    while(num > 0) {
-        if(num % 10 == 7) return true;
-        num /= 10;
-    }
-    return false;
-}
-
 void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
         ll n;
         cin>>n;
-        ll ans = 7;
+        vector<ll> arr(n);
+        for(auto &it: arr) cin>>it;
 
-        bool found = false;
-        for(int i = 0; i < 10; i++) {
-            ll p = n - i;
-            ll toAdd = 1;
-            while(toAdd <= 1e9) {
-                if(containsSeven(p + (i * toAdd))) {
-                    cout<<i<<ln;
-                    found = true;
-                    break;
-                }
-                toAdd *= 10;
+        int ans = INT_MAX;
+
+        // odd-even
+        if(arr[0] % 2 != 0) {
+            int curParity = 1;
+            int i = 0, cnt = 0;
+            while(i < n) {
+                int j = i;
+                while(j < n && ((curParity == 1 && arr[j] % 2 != 0) || ((curParity == 0 && arr[j] % 2 == 0)))) j++;
+                cnt += (j - i - 1);
+                i = j;
+                curParity = !curParity;
             }
-            if(found) break;
+            // cout<<cnt<<ln;
+            ans = min(ans, cnt);
         }
+
+        // even-odd
+        int i = 0, cnt = 0;
+        while(i < n && arr[i] % 2 != 0) {
+            i++;
+            cnt++;
+        }
+        if(i < n) {
+            int curParity = 0;
+            while(i < n) {
+                int j = i;
+                while(j < n && ((curParity == 1 && arr[j] % 2 != 0) || ((curParity == 0 && arr[j] % 2 == 0)))) j++;
+                cnt += (j - i - 1);
+                i = j;
+                curParity = !curParity;
+            }
+            // cout<<cnt<<ln;
+            ans = min(ans, cnt);
+        }
+
+        cout<<ans<<ln;
    }
-   //TC: O()
-   //SC: O()
+   //TC: O(n)
+   //SC: O(1)
 }
 
 
