@@ -41,36 +41,12 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-bool containsSeven(ll num) {
-    while(num > 0) {
-        if(num % 10 == 7) return true;
-        num /= 10;
-    }
-    return false;
-}
 
 void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        ll n;
-        cin>>n;
-        ll ans = 7;
-
-        bool found = false;
-        for(int i = 0; i < 10; i++) {
-            ll p = n - i;
-            ll toAdd = 1;
-            while(toAdd <= 1e9) {
-                if(containsSeven(p + (i * toAdd))) {
-                    cout<<i<<ln;
-                    found = true;
-                    break;
-                }
-                toAdd *= 10;
-            }
-            if(found) break;
-        }
+       
    }
    //TC: O()
    //SC: O()

@@ -91,8 +91,8 @@ void solve() {
         if(cntOdd > 1) cout<<"NO"<<ln;
         else cout<<"YES"<<ln;
    }
-   //TC: O()
-   //SC: O()
+   //TC: O(nlogn)
+   //SC: O(n)
 }
 
 

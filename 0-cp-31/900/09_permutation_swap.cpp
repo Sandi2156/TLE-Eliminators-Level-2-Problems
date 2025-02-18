@@ -26,7 +26,7 @@
 #define cpresent(c,x) (find(all(c),x) != (c).end())
 
 // Avoiding wrap around of size()-1 where size is a unsigned int.
-#define sz(a) int((a).size())   
+#define sz(a) int((a).size())
 
 
 using namespace std;
@@ -46,28 +46,50 @@ void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        ll a, b;
-        cin>>a>>b;
+        ll n;
+        cin>>n;
 
-        ll xk, yk, xq, yq;
-        cin>>xk>>yk>>xq>>yq;
+        vector<ll> arr(n);
+        for(auto &it: arr) cin>>it;
 
-        vector<pair<int, int>> directions = {{b, a}, {b, -a}, {-a, b}, {-a, -b}, {-b, a}, {-b, -a}, {a, b}, {a, -b}};
-
-        set<pair<int,int>> st;
-        for(auto it: directions) {
-            st.insert({ xk + it.first, yk + it.second });
+        vector<ll> dis;
+        for(int i = 0; i < n; i++) {
+            if(abs(arr[i] - i - 1) != 0) dis.push_back(abs(arr[i] - i - 1));
         }
 
-        set<pair<int,int>> ansset;
-        for(auto it: directions) {
-            if(st.find({ xq + it.first, yq + it.second }) != st.end()) ansset.insert({ xq + it.first, yq + it.second });
+        sort(dis.begin(), dis.end());
+        ll val = dis[0];
+        map<int, int> primeFactors;
+
+        for(int i = 2; i * i <= val; i++) {
+            if(val % i == 0) {
+                while(val % i == 0) {
+                    primeFactors[i]++;
+                    val /= i;
+                }
+            }
+        }
+        if(val > 1) primeFactors[val]++;
+
+        ll ans = 1;
+        for(auto it: primeFactors) {
+            ll maxi = it.second;
+            for(auto &val: dis) {
+                ll cnt = 0;
+                while(val % it.first == 0) {
+                    cnt++;
+                    val /= it.first;
+                }
+                maxi = min(maxi, cnt);
+            }
+            ans = ans * (maxi == 0 ? 1 : pow(it.first, maxi));
         }
 
-        cout<<ansset.size()<<ln;
+        cout<<ans<<ln;
+
    }
-   //TC: O(8)
-   //SC: O(log8)
+   //TC: O()
+   //SC: O()
 }
 
 

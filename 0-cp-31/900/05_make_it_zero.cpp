@@ -26,7 +26,7 @@
 #define cpresent(c,x) (find(all(c),x) != (c).end())
 
 // Avoiding wrap around of size()-1 where size is a unsigned int.
-#define sz(a) int((a).size())   
+#define sz(a) int((a).size())
 
 
 using namespace std;
@@ -46,28 +46,26 @@ void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        ll a, b;
-        cin>>a>>b;
+        ll n;
+        cin>>n;
 
-        ll xk, yk, xq, yq;
-        cin>>xk>>yk>>xq>>yq;
+        vector<ll> arr(n);
+        for(auto &it: arr) cin>>it;
 
-        vector<pair<int, int>> directions = {{b, a}, {b, -a}, {-a, b}, {-a, -b}, {-b, a}, {-b, -a}, {a, b}, {a, -b}};
-
-        set<pair<int,int>> st;
-        for(auto it: directions) {
-            st.insert({ xk + it.first, yk + it.second });
+        if(!(n & 1)) {
+            cout<<2<<ln;
+            cout<<1<<" "<<n<<ln;
+            cout<<1<<" "<<n<<ln;
+        } else {
+            cout<<4<<ln;
+            cout<<1<<" "<<n-1<<ln;
+            cout<<1<<" "<<n-1<<ln;
+            cout<<2<<" "<<n<<ln;
+            cout<<2<<" "<<n<<ln;
         }
-
-        set<pair<int,int>> ansset;
-        for(auto it: directions) {
-            if(st.find({ xq + it.first, yq + it.second }) != st.end()) ansset.insert({ xq + it.first, yq + it.second });
-        }
-
-        cout<<ansset.size()<<ln;
    }
-   //TC: O(8)
-   //SC: O(log8)
+   //TC: O(1)
+   //SC: O(1)
 }
 
 
