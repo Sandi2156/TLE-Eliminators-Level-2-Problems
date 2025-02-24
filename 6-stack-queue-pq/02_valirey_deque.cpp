@@ -41,80 +41,65 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-void merge(int i, int mid, int j, vector<int> &arr) {
-    vector<int> tmp(j-i+1);
-    int k = i, l = mid+1, p = 0;
-
-    while(k <= mid && l <= j) {
-        if(arr[k] <= arr[l]) {
-            tmp[p] = arr[k];
-            k++;
-        } else {
-            tmp[p] = arr[l];
-            l++;
-        }
-        p++;
-    }
-
-    while(k <= mid) {
-        tmp[p] = arr[k];
-        k++;
-        p++;
-    }
-
-    while(l <= j) {
-        tmp[p] = arr[l];
-        l++;
-        p++;
-    }
-
-    for(int t = i; t <= j; t++) {
-        arr[t] = tmp[t-i];
-    }
-}
-
-void mergeSort(int i, int j, vector<int> &arr) {
-    if(i >= j) return;
-
-    int mid = (i + j) / 2;
-    mergeSort(i, mid, arr);
-    mergeSort(mid+1, j, arr);
-
-    merge(i, mid, j, arr);
-}
-
-void quickSort(int i, int j, vector<int> &arr) {
-    if(i >= j) return;
-
-    int pivotIdx = j;
-    int left = i;
-    while(left < pivotIdx) {
-        if(arr[left] > arr[pivotIdx]) {
-            swap(arr[left], arr[pivotIdx-1]);
-            swap(arr[pivotIdx-1], arr[pivotIdx]);
-            pivotIdx--;
-        } else left++;
-    }
-
-    quickSort(i, pivotIdx-1, arr);
-    quickSort(pivotIdx+1, j, arr);
-}
 
 void solve() {
    ll t = 1;
 //    cin>>t;
    while(t--) {
-        int n;
-        cin>>n;
+        ll n, q;
+        cin>>n>>q;
 
-        vector<int> arr(n);
+        vector<ll> arr(n);
         for(auto &it: arr) cin>>it;
 
-        quickSort(0, n-1, arr);
-        for(auto it: arr) cout<<it<<" ";
+        ll maxi = INT_MIN;
+        deque<ll> dq;
+
+        for(auto it: arr) {
+            maxi = max(maxi, it);
+            dq.push_back(it);
+        }
+
+        map<int, pair<ll,ll>> mp;
+        int opNo = 1;
+        while(dq.front() != maxi) {
+            ll a = dq.front(); dq.pop_front();
+            ll b = dq.front(); dq.pop_front();
+
+            mp[opNo++] = {a, b};
+
+            if(a > b) {
+                dq.push_front(a);
+                dq.push_back(b);
+            } else {
+                dq.push_front(b);
+                dq.push_back(a);
+            }
+        }
+
+        vector<ll> modifiedArr(n);
+        int i = 0;
+        while(!dq.empty()) {
+            modifiedArr[i] = dq.front();
+            dq.pop_front();
+            i++;
+        }
+
+        while(q--) {
+            ll p;
+            cin>>p;
+
+            if(p <= mp.size()) {
+                cout<<mp[p].first<<" "<<mp[p].second<<ln;
+            } else {
+                p -= mp.size();
+                p %= (n-1);
+                cout<<modifiedArr[0]<<" "<<(p == 0 ? modifiedArr[n-1] : modifiedArr[p])<<ln;
+            }
+        }
    }
-   //TC: O()
-   //SC: O()
+   //TC: O(n logn)
+   //SC: O(n)
 }
 
 
