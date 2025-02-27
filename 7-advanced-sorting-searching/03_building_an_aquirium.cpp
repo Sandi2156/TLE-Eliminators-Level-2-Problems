@@ -42,44 +42,35 @@ typedef vector<vll> vvll;
 typedef double ld;
 
 
+bool helper(ll mid, vector<ll> &arr, ll x) {
+    ll totalWater = 0;
+    for(auto it: arr) {
+        totalWater += max(0LL, mid - it);
+    }
+
+    return totalWater <= x;
+}
+
 void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        ll k;
-        cin>>k;
+        ll n, x;
+        cin>>n>>x;
 
-        vector<vector<ll>> vec; // x, y, cnt
+        vector<ll> arr(n);
+        for(auto &it: arr) cin>>it;
 
-        ll x = -1e9, y = -1e9;
-        while(k > 0) {
-            ll cnt = 0, i;
-
-            for(i = 2; i <= 500; i++) {
-                ll totalPairs = (i * (i-1)) / 2;
-                if(totalPairs > k) break;
-            }
-            i--;
-            ll totalPairs = (i * (i-1)) / 2;
-            k -= totalPairs;
-            vec.push_back({x, y, i});
-            x++;
-            y += i;
+        ll l = 1, r = 1e10, ans = -1;
+        while(l <= r) {
+            ll mid = (l + r) / 2;
+            if(helper(mid, arr, x)) {
+                ans = mid;
+                l = mid + 1;
+            } else r = mid - 1;
         }
 
-        vector<pair<ll,ll>> ans;
-        for(auto it: vec) {
-            ll x = it[0], y = it[1], cnt = it[2];
-            while(cnt--) {
-                ans.push_back({x, y});
-                y++;
-            }
-        }
-
-        cout<<ans.size()<<ln;
-        for(auto it: ans) {
-            cout<<it.first<<" "<<it.second<<ln;
-        }
+        cout<<ans<<ln;
    }
    //TC: O()
    //SC: O()

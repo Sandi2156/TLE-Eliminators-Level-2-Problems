@@ -44,41 +44,48 @@ typedef double ld;
 
 void solve() {
    ll t = 1;
-   cin>>t;
+//    cin>>t;
    while(t--) {
-        ll k;
-        cin>>k;
+        ll a, b, q;
+        cin>>a>>b>>q;
 
-        vector<vector<ll>> vec; // x, y, cnt
+        vector<ll> shrines(a+2), temples(b+2);
+        for(int i = 1; i <= a; i++) cin>>shrines[i];
+        // sort(shrines.begin(), shrines.end());
 
-        ll x = -1e9, y = -1e9;
-        while(k > 0) {
-            ll cnt = 0, i;
+        for(int i = 1; i <= b; i++) cin>>temples[i];
+        // sort(temples.begin(), temples.end());
 
-            for(i = 2; i <= 500; i++) {
-                ll totalPairs = (i * (i-1)) / 2;
-                if(totalPairs > k) break;
-            }
-            i--;
-            ll totalPairs = (i * (i-1)) / 2;
-            k -= totalPairs;
-            vec.push_back({x, y, i});
-            x++;
-            y += i;
-        }
+        shrines[0] = temples[0] = -1e18;
+        shrines[a+1] = temples[b+1] = 1e18;
 
-        vector<pair<ll,ll>> ans;
-        for(auto it: vec) {
-            ll x = it[0], y = it[1], cnt = it[2];
-            while(cnt--) {
-                ans.push_back({x, y});
-                y++;
-            }
-        }
+        // cout<<a<<ln<<b<<ln<<q;
+        while(q--) {
+            ll x;
+            cin>>x;
 
-        cout<<ans.size()<<ln;
-        for(auto it: ans) {
-            cout<<it.first<<" "<<it.second<<ln;
+            ll ls = *(--upper_bound(shrines.begin(), shrines.end(), x));
+            ll lt = *(--upper_bound(temples.begin(), temples.end(), x));
+            ll rs = *lower_bound(shrines.begin(), shrines.end(), x);
+            ll rt = *lower_bound(temples.begin(), temples.end(), x);
+
+            // cout<<ls<<" "<<lt<<" "<<rs<<" "<<rt<<ln;
+
+            ll ans = 1e18;
+
+            // ls, lt;
+            ans = min(ans, x - min(ls, lt));
+
+            // ls, rt
+            ans = min(ans, rt - ls + min(rt-x, x-ls));
+
+            // rs, lt
+            ans = min(ans, rs - lt + min(rs - x, x - lt));
+
+            // rs, rt
+            ans = min(ans, max(rs, rt) - x);
+
+            cout<<ans<<ln;
         }
    }
    //TC: O()

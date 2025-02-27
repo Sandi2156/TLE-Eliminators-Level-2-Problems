@@ -42,44 +42,70 @@ typedef vector<vll> vvll;
 typedef double ld;
 
 
+ll merge(vector<ll> &arr, int i, int mid, int j) {
+    vector<ll> temp(j-i+1);
+    ll ans = 0;
+
+    int p = i, q = mid+1, idx = 0;
+    while(p <= mid && q <= j) {
+        if(arr[p] <= arr[q]) {
+            temp[idx] = arr[p];
+            p++;
+        } else {
+            temp[idx] = arr[q];
+            q++;
+            ans += (mid-p+1);
+        }
+        idx++;
+    }
+
+    while(p <= mid) {
+        temp[idx++] = arr[p++];
+    }
+    while(q <= j) {
+        temp[idx++] = arr[q++];
+    }
+
+    for(int k = i; k <= j; k++) {
+        arr[k] = temp[k-i];
+    }
+
+    return ans;
+}
+
+ll mergeSort(vector<ll> &arr, int i, int j) {
+    if(i >= j) return 0;
+
+    int mid = (i + j) / 2;
+    ll ans = mergeSort(arr, i, mid);
+    ans += mergeSort(arr, mid+1, j);
+
+    ans += merge(arr, i, mid, j);
+
+    return ans;
+}
+
+
 void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        ll k;
-        cin>>k;
+        ll n;
+        cin>>n;
 
-        vector<vector<ll>> vec; // x, y, cnt
+        vector<ll> a(n), b(n);
+        for(auto &it: a) cin>>it;
+        for(auto &it: b) cin>>it;
 
-        ll x = -1e9, y = -1e9;
-        while(k > 0) {
-            ll cnt = 0, i;
+        map<ll, ll> mp;
+        for(int i = 0; i < n; i++) mp[b[i]] = i;
 
-            for(i = 2; i <= 500; i++) {
-                ll totalPairs = (i * (i-1)) / 2;
-                if(totalPairs > k) break;
-            }
-            i--;
-            ll totalPairs = (i * (i-1)) / 2;
-            k -= totalPairs;
-            vec.push_back({x, y, i});
-            x++;
-            y += i;
+        vector<ll> arr(n);
+        for(int i = 0; i < n; i++) {
+            arr[i] = mp[a[i]];
         }
 
-        vector<pair<ll,ll>> ans;
-        for(auto it: vec) {
-            ll x = it[0], y = it[1], cnt = it[2];
-            while(cnt--) {
-                ans.push_back({x, y});
-                y++;
-            }
-        }
-
-        cout<<ans.size()<<ln;
-        for(auto it: ans) {
-            cout<<it.first<<" "<<it.second<<ln;
-        }
+        cout<<mergeSort(arr, 0, n-1)<<ln;
    }
    //TC: O()
    //SC: O()

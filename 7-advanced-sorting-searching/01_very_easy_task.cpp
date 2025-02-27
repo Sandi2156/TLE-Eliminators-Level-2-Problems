@@ -44,41 +44,27 @@ typedef double ld;
 
 void solve() {
    ll t = 1;
-   cin>>t;
+//    cin>>t4 1
    while(t--) {
-        ll k;
-        cin>>k;
+        ll n, x, y;
+        cin>>n>>x>>y;
 
-        vector<vector<ll>> vec; // x, y, cnt
+        if(y < x) swap(x, y);
 
-        ll x = -1e9, y = -1e9;
-        while(k > 0) {
-            ll cnt = 0, i;
+        if(n == 1) cout<<x<<ln;
+        else {
+            ll left = x, right = y * n;
+            ll ans;
+            while(left <= right) {
+                ll mid = (left + right) / 2;
 
-            for(i = 2; i <= 500; i++) {
-                ll totalPairs = (i * (i-1)) / 2;
-                if(totalPairs > k) break;
+                ll t = (mid / x) + ((mid-x) / y);
+                if(t >= n) {
+                    ans = mid;
+                    right = mid - 1;
+                } else left = mid + 1;
             }
-            i--;
-            ll totalPairs = (i * (i-1)) / 2;
-            k -= totalPairs;
-            vec.push_back({x, y, i});
-            x++;
-            y += i;
-        }
-
-        vector<pair<ll,ll>> ans;
-        for(auto it: vec) {
-            ll x = it[0], y = it[1], cnt = it[2];
-            while(cnt--) {
-                ans.push_back({x, y});
-                y++;
-            }
-        }
-
-        cout<<ans.size()<<ln;
-        for(auto it: ans) {
-            cout<<it.first<<" "<<it.second<<ln;
+            cout<<ans<<ln;
         }
    }
    //TC: O()
