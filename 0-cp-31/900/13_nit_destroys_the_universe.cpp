@@ -41,37 +41,38 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-void dfs(ll node, ll parent, map<ll, vector<ll>> &adjList) {
-
-    for(ll adjNode: adjList[node]) {
-        if(adjNode != parent) 
-            dfs(adjNode, node, adjList);
-    }
-
-    cout<<node<<" ";
-}
 
 void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        ll n, st, en;
-        cin>>n>>st>>en;
+        ll n;
+        cin>>n;
+        vll arr(n);
 
-        map<ll, vector<ll>> adjList;
-        for(ll i = 0; i < n-1; i++) {
-            ll u, v;
-            cin>>u>>v;
+        for0(i, n) cin>>arr[i];
 
-            adjList[u].push_back(v);
-            adjList[v].push_back(u);
+
+        ll i = 0;
+        ll ans = 0;
+        while(i < n) {
+            if(arr[i] == 0) {
+                i++;
+                continue;
+            }
+            ll j = i;
+
+            while(j < n && arr[j] != 0) j++;
+            ans++;
+            i = j;
         }
 
-        dfs(en, 0, adjList);
-        cout<<ln;
+        if(ans == 0 || ans == 1) cout<<ans<<ln;
+        else cout<<2<<ln;
+
    }
-   //TC: O()
-   //SC: O()
+   //TC: O(n)
+   //SC: O(1)
 }
 
 
