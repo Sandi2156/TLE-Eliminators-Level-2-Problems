@@ -46,10 +46,41 @@ void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
+        ll a, b, c;
+        cin>>a>>b>>c;
+
+        if(b - a == c - b) {
+            cout<<"YES"<<ln;
+            // cout<<"a"<<ln;
+            continue;
+        }
         
+        ll nC = b + (b - a);
+        if(nC % c == 0 && nC > 0 && (b - a == nC - b)) {
+            cout<<"YES"<<ln;
+            // cout<<"b"<<ln;
+            continue;
+        }
+        
+        ll nA = b - (c - b);
+        if(nA % a == 0 && nA > 0 && (b - nA == c - b)) {
+            cout<<"YES"<<ln;
+            // cout<<"c"<<ln;
+            continue;
+        }
+        
+        ll nB = a + (c - a) / 2;
+        
+        if(nB % b == 0 && nB > 0 && (nB - a == c - nB)) {
+            // cout<<"d"<<ln;
+            cout<<"YES"<<ln;
+            continue;
+        }
+
+        cout<<"NO"<<ln;
    }
-   //TC: O()
-   //SC: O()
+   //TC: O(1)
+   //SC: O(1)
 }
 
 

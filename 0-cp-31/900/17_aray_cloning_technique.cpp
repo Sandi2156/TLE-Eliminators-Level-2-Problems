@@ -46,10 +46,30 @@ void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        
+        ll n;
+        cin>>n;
+
+        vll arr(n);
+        for0(i, n) cin>>arr[i];
+
+        map<ll, ll> freqMap;
+        for(auto it: arr) freqMap[it]++;
+
+        ll maxFreq = INT_MIN;
+        for(auto it: freqMap) maxFreq = max(maxFreq, it.second);
+
+        ll ans = 0, p = maxFreq;
+        while(p < n) {
+            p += p;
+            ans++;
+        }
+
+        ans += (n - maxFreq);
+
+        cout<<ans<<ln;
    }
-   //TC: O()
-   //SC: O()
+   //TC: O(n)
+   //SC: O(n)
 }
 
 

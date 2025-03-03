@@ -46,10 +46,35 @@ void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        
+        string s, t;
+        cin>>s>>t;
+
+        map<char, vector<int>> mp;
+        for0(i, s.length()) mp[s[i]].push_back(i);
+
+        ll prevIdx = -1;
+        map<char, ll> freqMap;
+        for(auto ch: t) freqMap[ch]++;
+
+        string ans = "YES";
+        for(auto ch: t) {
+            if(freqMap[ch] > mp[ch].size()) {
+                ans = "NO";
+                break;
+            }
+            ll curIdx = mp[ch][mp[ch].size() - freqMap[ch]];
+            if(curIdx < prevIdx) {
+                ans = "NO";
+                break;
+            }
+            prevIdx = curIdx;
+            freqMap[ch]--;
+        }
+
+        cout<<ans<<ln;
    }
-   //TC: O()
-   //SC: O()
+   //TC: O(n + 2p)
+   //SC: O(n + p)
 }
 
 
