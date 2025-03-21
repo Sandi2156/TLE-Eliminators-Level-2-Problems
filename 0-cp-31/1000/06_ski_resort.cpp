@@ -65,8 +65,8 @@ void solve() {
 
         cout<<ans<<ln;
    }
-   //TC: O()
-   //SC: O()
+   //TC: O(n)
+   //SC: O(1)
 }
 
 
