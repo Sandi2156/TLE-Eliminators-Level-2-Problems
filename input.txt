@@ -1,7 +1,11 @@
-3
-3 2
-1 2 3
-2 3
-1 1
-4 3
-2 8 3 5
+5
+2
+aa
+7
+abcabcd
+5
+aaaaa
+10
+paiumoment
+4
+aazz
