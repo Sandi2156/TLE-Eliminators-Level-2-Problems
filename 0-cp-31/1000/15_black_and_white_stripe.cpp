@@ -46,13 +46,31 @@ void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        
-   }
+        ll n, k;
+        cin>>n>>k;
 
-   /*
-        
-        
-   */
+        string s;
+        cin>>s;
+
+        ll ans = INT_MAX;
+        ll cntW = 0;
+        int i = 0, j = 0;
+        while(j < n) {
+            if(s[j] == 'W') cntW++;
+
+            if(j >= k-1) {
+                ans = min(ans, cntW);
+                
+                if(s[i] == 'W') cntW--;
+                i++;
+            }
+            j++;
+        }
+
+        cout<<ans<<ln;
+   }
+   //TC: O(n)
+   //SC: O(1)
 }
 
 

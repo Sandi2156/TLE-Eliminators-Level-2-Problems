@@ -46,11 +46,32 @@ void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        
+        ll n, x;
+        cin>>n>>x;
+
+        vll arr(n);
+        for0(i, n) cin>>arr[i];
+
+        ll changes = 0;
+        ll low = arr[0] - x, high = arr[0] + x;
+
+        for(int i = 1; i < n; i++) {
+            if(abs(low - arr[i]) <= x || abs(high - arr[i]) <= x) {
+                low = max(arr[i]-x, low);
+                high = min(high, arr[i]+x);
+            } else {
+                changes++;
+                low = arr[i]-x;
+                high = arr[i]+x;
+            }
+        }
+
+        cout<<changes<<ln;
    }
+   //TC: O(n)
+   //SC: O(1)
 
    /*
-        
         
    */
 }
