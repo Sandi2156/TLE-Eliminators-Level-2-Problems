@@ -46,36 +46,18 @@ void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        ll n, m;
-        cin>>n>>m;
+        ll n, r, b;
+        cin>>n>>r>>b;
 
-        vector<string> arr(n);
-        for(auto &it: arr) cin>>it;
+        ll p = r / (b+1), q = r % (b+1);
+        for(int i = 0; i < q; i++) cout<<string(p+1, 'R')<<'B';
+        for(int i = q; i < b; i++) cout<<string(p, 'R')<<'B';
+        cout<<string(p, 'R');
 
-        // for(auto it: arr) {
-        //     cout<<it<<ln;
-        // }
-
-        bool isPossible = true;
-        for(int i = 1; i < n; i++) {
-            for(int j = 1; j < m; j++) {
-                if(arr[i][j] == '0') continue;;
-                if(arr[i-1][j] == '1' || arr[i][j-1] == '1') continue;
-
-                isPossible = false;
-                break;
-            }
-            if(!isPossible) break;
-        }
-
-        if(isPossible) cout<<"YES"<<ln;
-        else cout<<"NO"<<ln;
+        cout<<ln;
    }
-
-   /*
-        
-        
-   */
+   //TC: O(n)
+   //SC: O(1)
 }
 
 

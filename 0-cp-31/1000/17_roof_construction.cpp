@@ -46,35 +46,40 @@ void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        ll n, m;
-        cin>>n>>m;
+        ll n;
+        cin>>n;
 
-        vector<string> arr(n);
-        for(auto &it: arr) cin>>it;
-
-        // for(auto it: arr) {
-        //     cout<<it<<ln;
-        // }
-
-        bool isPossible = true;
+        ll val = 1;
         for(int i = 1; i < n; i++) {
-            for(int j = 1; j < m; j++) {
-                if(arr[i][j] == '0') continue;;
-                if(arr[i-1][j] == '1' || arr[i][j-1] == '1') continue;
-
-                isPossible = false;
-                break;
+            ll t = val;
+            if(((val & (val-1)) == 0 || val == 1) && (t << 1) >= n) {
+                cout<<0<<" ";
+                cout<<val<<" ";
+            } else {
+                cout<<val<<" ";
             }
-            if(!isPossible) break;
+            val++;
         }
-
-        if(isPossible) cout<<"YES"<<ln;
-        else cout<<"NO"<<ln;
+        cout<<ln;
    }
+   //TC: O()
+   //SC: O()
 
    /*
-        
-        
+        0000   0000
+        0001   0001
+        0010   0011
+        0011   0010
+        0100   0110
+        0101   0111
+        0110   0101
+        0111   0100
+        1000
+        1001
+   
+   
+   
+   
    */
 }
 
