@@ -71,8 +71,8 @@ void solve() {
             cout<<l+1<<" "<<r+1<<ln;
         }
    }
-   //TC: O()
-   //SC: O()
+   //TC: O(n)
+   //SC: O(1)
 }
 
 
