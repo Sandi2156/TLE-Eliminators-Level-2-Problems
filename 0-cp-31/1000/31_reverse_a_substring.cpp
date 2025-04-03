@@ -44,15 +44,35 @@ typedef double ld;
 
 void solve() {
    ll t = 1;
-   cin>>t;
+//    cin>>t;
    while(t--) {
-        
-   }
+        ll n;
+        cin>>n;
 
-   /*
+        string s;
+        cin>>s;
+
+        int l = -1, r = -1;
+        char ch = s[0];
+        l = 0;
+
+        for(int i = 1; i < n; i++) {
+            if(s[i] < ch) {
+                r = i;
+                break;
+            }
+            ch = s[i];
+            l = i;
+        }
         
-        
-   */
+        if(r == -1) cout<<"NO"<<ln;
+        else {
+            cout<<"YES"<<ln;
+            cout<<l+1<<" "<<r+1<<ln;
+        }
+   }
+   //TC: O()
+   //SC: O()
 }
 
 

@@ -46,12 +46,44 @@ void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        
+
+        ll a, b;
+        cin>>a>>b;
+
+        ll cnt1 = 0, cnt2 = 0;
+
+        while(a % 2 == 0) {
+            cnt1++;
+            a = a / 2;
+        }
+        while(b % 2 == 0) {
+            cnt2++;
+            b = b / 2;
+        }
+
+        if(a != b) {
+            cout<<-1<<ln;
+        } else {
+            ll diff = abs(cnt2 - cnt1);
+            ll ans = diff / 3;
+            diff %= 3;
+            ans += (diff / 2);
+            diff %= 2;
+
+            ans += diff;
+
+            cout<<ans<<ln;
+        }
+
    }
+   //TC: O()
+   //SC: O()
 
    /*
+        8 4
+
         
-        
+   
    */
 }
 

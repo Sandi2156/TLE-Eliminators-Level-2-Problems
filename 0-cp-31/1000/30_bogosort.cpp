@@ -46,13 +46,19 @@ void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        
-   }
+        ll n;
+        cin>>n;
 
-   /*
-        
-        
-   */
+        vll arr(n);
+        for0(i, n) cin>>arr[i];
+
+        sort(arr.rbegin(), arr.rend());
+
+        for(auto it: arr) cout<<it<<" ";
+        cout<<ln;
+   }
+   //TC: O(nlogn)
+   //SC: O(1)
 }
 
 

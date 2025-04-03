@@ -46,13 +46,25 @@ void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        
-   }
+        ll n;
+        cin>>n;
 
-   /*
-        
-        
-   */
+        string s;
+        cin>>s;
+
+        stack<char> stk;
+
+        ll ans = 0;
+        for(auto ch: s) {
+            if(ch == '(') stk.push(ch);
+            else if(!stk.empty()) stk.pop();
+            else if(stk.empty()) ans++;
+        }
+
+        cout<<ans<<ln;
+   }
+   //TC: O(n)
+   //SC: O(n)
 }
 
 
