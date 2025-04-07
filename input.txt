@@ -1,2 +1,11 @@
-6
-aabcfg
+5
+5
+aaaaa
+1
+z
+5
+ababa
+14
+bcdaaaabcdaaaa
+20
+abcdefghijklmnopqrst
