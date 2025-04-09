@@ -41,52 +41,53 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-bool isPossible(ll mex, vll &arr, ll k) {
+ll getDiff(ll k, vll &arr) {
+    ll mini = LLONG_MAX, maxi = LLONG_MIN;
+
     int i = 0;
     while(i < arr.size()) {
-        unordered_set<ll> st;
-        while(i < arr.size()) {
-            if(arr[i] < mex) st.insert(arr[i]);
-            if(st.size() == mex) {
-                k--;
-                break;
-            }
-            i++;
+        int j = i;
+        ll p = k, sum = 0;
+        while(p--) {
+            sum += arr[j++];
         }
-        i++;
+        mini = min(mini, sum);
+        maxi = max(maxi, sum);
+        i = j;
     }
 
-    return k <= 0;
+    return maxi - mini;
 }
 
 void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        ll n, k;
-        cin>>n>>k;
+        ll n;
+        cin>>n;
 
         vll arr(n);
         for0(i, n) cin>>arr[i];
 
-        ll l = 0, r = 1e10;
-        ll ans = -1;
+        ll ans = 0;
+        for(ll i = 1; i * i <= n; i++) {
+            if(n % i == 0) {
+                ll diff = getDiff(i, arr);
+                ans = max(ans, diff);
 
-        while(l <= r) {
-            ll mid = (l + r) / 2;
-
-            if(isPossible(mid, arr, k)) {
-                ans = mid;
-                l = mid + 1;
-            } else r = mid - 1;
+                diff = getDiff(n/i, arr);
+                ans = max(ans, diff);
+            }
         }
 
         cout<<ans<<ln;
    }
-
+   //TC: O()
+   //SC: O()
    /*
-        
-        
+        1 2 3 3 6 10
+        1 3 6 9 15 25
+        0 1 2 3 4 5
    */
 }
 

@@ -41,53 +41,47 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-bool isPossible(ll mex, vll &arr, ll k) {
-    int i = 0;
-    while(i < arr.size()) {
-        unordered_set<ll> st;
-        while(i < arr.size()) {
-            if(arr[i] < mex) st.insert(arr[i]);
-            if(st.size() == mex) {
-                k--;
-                break;
-            }
-            i++;
-        }
-        i++;
+ll findMaxSum(int i, int j, vll &arr) {
+    ll ans = INT_MIN, sum = 0;
+
+    for(int k = i; k <= j; k++) {
+        sum += arr[k];
+        ans = max(sum, ans);
+
+        if(sum < 0) sum = 0;
     }
 
-    return k <= 0;
+    return ans;
 }
 
 void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        ll n, k;
-        cin>>n>>k;
+        ll n;
+        cin>>n;
 
         vll arr(n);
         for0(i, n) cin>>arr[i];
 
-        ll l = 0, r = 1e10;
-        ll ans = -1;
+        int i = 0;
+        ll ans = INT_MIN;
+        while(i < n) {
+            int j = i, parity = abs(arr[i]) & 1;
 
-        while(l <= r) {
-            ll mid = (l + r) / 2;
-
-            if(isPossible(mid, arr, k)) {
-                ans = mid;
-                l = mid + 1;
-            } else r = mid - 1;
+            while(j < n) {
+                if((abs(arr[j]) & 1) != parity) break;
+                parity = !parity;
+                j++;
+            }
+            ans = max(ans, findMaxSum(i, j-1, arr));
+            i = j;
         }
 
         cout<<ans<<ln;
    }
-
-   /*
-        
-        
-   */
+   //TC: O(2n)
+   //SC: O(1)
 }
 
 
