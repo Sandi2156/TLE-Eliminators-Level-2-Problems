@@ -41,53 +41,38 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-bool isPossible(ll mex, vll &arr, ll k) {
-    int i = 0;
-    while(i < arr.size()) {
-        set<ll> st;
-        while(i < arr.size()) {
-            if(arr[i] < mex) st.insert(arr[i]);
-            if(st.size() == mex) {
-                k--;
-                break;
-            }
-            i++;
-        }
-        i++;
-    }
-
-    return k <= 0;
-}
 
 void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        ll n, k;
-        cin>>n>>k;
+        ll n, c;
+        cin>>n>>c;
 
         vll arr(n);
         for0(i, n) cin>>arr[i];
 
-        ll l = 0, r = n;
-        ll ans = -1;
-
+        ll l = 0, r = 1e10, ans = -1;
         while(l <= r) {
             ll mid = (l + r) / 2;
 
-            if(isPossible(mid, arr, k)) {
+            ll area = 0;
+            for(auto it: arr) {
+                area += (it + 2LL*mid) * (it + 2LL*mid);
+                if(area > c) break;
+            }
+
+            if(area == c) {
                 ans = mid;
-                l = mid + 1;
-            } else r = mid - 1;
+                break;
+            } else if(area < c) l = mid + 1;
+            else r = mid - 1;
         }
 
         cout<<ans<<ln;
    }
-
-   /*
-        
-        
-   */
+   //TC: O(nlogn)
+   //SC: O(1)
 }
 
 

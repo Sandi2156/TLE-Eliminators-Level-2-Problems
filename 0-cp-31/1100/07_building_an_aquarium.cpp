@@ -41,41 +41,31 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-bool isPossible(ll mex, vll &arr, ll k) {
-    int i = 0;
-    while(i < arr.size()) {
-        set<ll> st;
-        while(i < arr.size()) {
-            if(arr[i] < mex) st.insert(arr[i]);
-            if(st.size() == mex) {
-                k--;
-                break;
-            }
-            i++;
-        }
-        i++;
+bool isPossible(ll mid, vll &arr, ll x) {
+    ll water = 0;
+    for(auto it: arr) {
+        water += max(0LL, mid - it);
     }
 
-    return k <= 0;
+    return water <= x;
 }
 
 void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        ll n, k;
-        cin>>n>>k;
+        ll n, x;
+        cin>>n>>x;
 
         vll arr(n);
         for0(i, n) cin>>arr[i];
 
-        ll l = 0, r = n;
-        ll ans = -1;
-
+        ll l = 1, r = 1e10;
+        ll ans;
         while(l <= r) {
             ll mid = (l + r) / 2;
 
-            if(isPossible(mid, arr, k)) {
+            if(isPossible(mid, arr, x)) {
                 ans = mid;
                 l = mid + 1;
             } else r = mid - 1;
@@ -83,11 +73,8 @@ void solve() {
 
         cout<<ans<<ln;
    }
-
-   /*
-        
-        
-   */
+   //TC: O()
+   //SC: O()
 }
 
 

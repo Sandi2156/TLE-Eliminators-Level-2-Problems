@@ -41,53 +41,50 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-bool isPossible(ll mex, vll &arr, ll k) {
-    int i = 0;
-    while(i < arr.size()) {
-        set<ll> st;
-        while(i < arr.size()) {
-            if(arr[i] < mex) st.insert(arr[i]);
-            if(st.size() == mex) {
-                k--;
-                break;
-            }
-            i++;
-        }
-        i++;
-    }
-
-    return k <= 0;
-}
 
 void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        ll n, k;
-        cin>>n>>k;
+        ll n, k, a, b;
+        cin>>n>>k>>a>>b;
+        a--,b--;
 
-        vll arr(n);
-        for0(i, n) cin>>arr[i];
+        vector<pair<ll, ll>> points;
+        for0(i, n) {
+            ll a, b;
+            cin>>a>>b;
+            points.push_back({a, b});
+        }
 
-        ll l = 0, r = n;
-        ll ans = -1;
+        ll ans = abs(points[a].first - points[b].first) + abs(points[a].second - points[b].second);
+        if(k > 1) {
+            if(a < k && b < k) {
+                ans = 0;
+            } else {
+                ll dist1 = LLONG_MAX, c, d;
+                for0(i, k) {
+                    if(abs(points[a].first - points[i].first) + abs(points[a].second - points[i].second) < dist1) {
+                        dist1 = abs(points[a].first - points[i].first) + abs(points[a].second - points[i].second);
+                        c = i;
+                    }
+                }
+                ll dist2 = LLONG_MAX;
+                for0(i, k) {
+                    if(abs(points[b].first - points[i].first) + abs(points[b].second - points[i].second) < dist2) {
+                        dist2 = abs(points[b].first - points[i].first) + abs(points[b].second - points[i].second);
+                        d = i;
+                    }
+                }
 
-        while(l <= r) {
-            ll mid = (l + r) / 2;
-
-            if(isPossible(mid, arr, k)) {
-                ans = mid;
-                l = mid + 1;
-            } else r = mid - 1;
+                ans = min(ans, dist1 + dist2);
+            }
         }
 
         cout<<ans<<ln;
    }
-
-   /*
-        
-        
-   */
+   //TC: O(n)
+   //SC: O(1)
 }
 
 

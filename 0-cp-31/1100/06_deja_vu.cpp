@@ -41,53 +41,40 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-bool isPossible(ll mex, vll &arr, ll k) {
-    int i = 0;
-    while(i < arr.size()) {
-        set<ll> st;
-        while(i < arr.size()) {
-            if(arr[i] < mex) st.insert(arr[i]);
-            if(st.size() == mex) {
-                k--;
-                break;
-            }
-            i++;
-        }
-        i++;
-    }
-
-    return k <= 0;
-}
 
 void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        ll n, k;
-        cin>>n>>k;
+        ll n, q;
+        cin>>n>>q;
 
-        vll arr(n);
+        vll arr(n), x(q);
         for0(i, n) cin>>arr[i];
+        for0(i, q) cin>>x[i];
 
-        ll l = 0, r = n;
-        ll ans = -1;
-
-        while(l <= r) {
-            ll mid = (l + r) / 2;
-
-            if(isPossible(mid, arr, k)) {
-                ans = mid;
-                l = mid + 1;
-            } else r = mid - 1;
+        unordered_set<ll> valSet;
+        vll valArr;
+        for(auto it: x) {
+            if(valSet.find(pow(2, it)) == valSet.end()) {
+                valSet.insert(pow(2, it));
+                valArr.push_back(pow(2, it));
+            }
         }
 
-        cout<<ans<<ln;
-   }
+        for(auto it: valArr) {
+            for0(i, n) {
+                if(arr[i] % it == 0) {
+                    arr[i] += (it >> 1);
+                }
+            }
+        }
 
-   /*
-        
-        
-   */
+        for(auto it: arr) cout<<it<<" ";
+        cout<<ln;
+   }
+   //TC: O(x*log30+30*n) => O(n)
+   //SC: O(30)
 }
 
 
