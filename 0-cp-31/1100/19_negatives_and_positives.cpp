@@ -46,39 +46,25 @@ void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        ll n, k;
-        cin>>n>>k;
+        ll n;
+        cin>>n;
+        vll arr(n);
+        for0(i, n) cin>>arr[i];
 
-        vector<vll> arr(n, vll(n));
-        for(int i = 0; i < n; i++)
-            for(int j = 0; j < n; j++) cin>>arr[i][j];
-
-        ll cnt = 0;
-        for(int i = 0; i <= n/2-1; i++) {
-            for(int j = 0; j < n; j++) {
-                if(arr[i][j] != arr[n-1-i][n-1-j]) cnt++;
-            }
+        ll ans = 0, cnt = 0, mini = INT_MAX;
+        for0(i, n) {
+            ans += abs(arr[i]);
+            if(arr[i] < 0) cnt++;
+            mini = min(mini, abs(arr[i]));
         }
 
-        if(n & 1) {
-            int i = n/2;
-            int j1 = 0, j2 = n-1;
-            while(j1 < j2) {
-                if(arr[i][j1] != arr[i][j2]) cnt++;
-                j1++,j2--;
-            }
+        if(cnt & 1) {
+            ans = ans - 2*mini;
         }
 
-        // cout<<cnt<<ln;
-
-        if(k < cnt) cout<<"NO"<<ln;
-        else if(n & 1) cout<<"YES"<<ln;
-        else {
-            if((k - cnt) & 1) cout<<"NO"<<ln;
-            else cout<<"YES"<<ln;
-        }
+        cout<<ans<<ln;
    }
-   //TC: O(n*n)
+   //TC: O(n)
    //SC: O(1)
 }
 

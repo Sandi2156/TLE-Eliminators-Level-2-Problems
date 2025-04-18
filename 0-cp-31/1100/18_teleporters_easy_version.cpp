@@ -46,40 +46,30 @@ void solve() {
    ll t = 1;
    cin>>t;
    while(t--) {
-        ll n, k;
-        cin>>n>>k;
+        ll n, c;
+        cin>>n>>c;
+        vll arr(n);
+        for0(i, n) cin>>arr[i];
 
-        vector<vll> arr(n, vll(n));
-        for(int i = 0; i < n; i++)
-            for(int j = 0; j < n; j++) cin>>arr[i][j];
+        vector<pair<ll, ll>> vec;
+        for0(i, n) vec.push_back({i+1, arr[i]});
 
-        ll cnt = 0;
-        for(int i = 0; i <= n/2-1; i++) {
-            for(int j = 0; j < n; j++) {
-                if(arr[i][j] != arr[n-1-i][n-1-j]) cnt++;
+        sort(vec.begin(), vec.end(), [&](pair<ll, ll> &p1, pair<ll, ll> &p2) {
+            return p1.first+p1.second < p2.first+p2.second;
+        });
+
+        ll ans = 0;
+        for0(i, n) {
+            if(c >= vec[i].first + vec[i].second) {
+                ans++;
+                c -= (vec[i].first + vec[i].second);
             }
         }
 
-        if(n & 1) {
-            int i = n/2;
-            int j1 = 0, j2 = n-1;
-            while(j1 < j2) {
-                if(arr[i][j1] != arr[i][j2]) cnt++;
-                j1++,j2--;
-            }
-        }
-
-        // cout<<cnt<<ln;
-
-        if(k < cnt) cout<<"NO"<<ln;
-        else if(n & 1) cout<<"YES"<<ln;
-        else {
-            if((k - cnt) & 1) cout<<"NO"<<ln;
-            else cout<<"YES"<<ln;
-        }
+        cout<<ans<<ln;
    }
-   //TC: O(n*n)
-   //SC: O(1)
+   //TC: O(nlogn)
+   //SC: O(n*2)
 }
 
 
