@@ -41,62 +41,53 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
+bool predicateFunc(ll mid, vll &arr, ll k) {
 
-// void solve() {
-//    ll t = 1;
-//    cin>>t;
-//    while(t--) {
-//         ll n, k;
-//         cin>>n>>k;
+    ll curLoad = 0;
+    for(auto it: arr) {
+        curLoad += it;
 
-//         vll arr(n);
-//         for0(i, n) cin>>arr[i];
+        if(curLoad > mid) {
+            k--;
+            curLoad = it;
+        }
+    }
 
-//         sort(arr.rbegin(), arr.rend());
-
-//         if(arr[0] - arr[n-1] > k+1) cout<<"Jerry"<<ln;
-//         else {
-//             ll sum = 0;
-//             for(auto it: arr) sum += it;
-            
-//             if(sum & 1) cout<<"Tom"<<ln;
-//             else cout<<"Jerry"<<ln;
-//         }
-//    }
-
-//    /*
-//         10 9 1
-//         9 9
-//         8 9
-//         8 8
-//         7 8
-//         7 7
-//         6 7
-//         6 6
-//         5 6
-//         5 5
-//         5 4
-//         4 4
-//         4 3
-//         3 3
-//         3 2
-//         2 2
-//         2 1
-//         1 1
-//         1 0
-//         0 0
-
-        
-//    */
-// }
+    return k >= 1;
+}
 
 void solve() {
-    /*
-    
-        gcd -> greatest common divisor
-        
-    */
+   ll t = 1;
+   cin>>t;
+   while(t--) {
+        ll n, k;
+        cin>>n>>k;
+
+        vll arr(n);
+        for0(i, n) cin>>arr[i];
+
+        ll l = INT_MIN, r = 0;
+        for(auto it: arr) {
+            l = max(it, l);
+            r += it;
+        }
+
+        ll ans = -1;
+        while(l <= r) {
+            ll mid = (l + r) / 2;
+
+            if(predicateFunc(mid, arr, k)) {
+                ans = mid;
+                r = mid - 1;
+            } else l = mid + 1;
+        }
+
+        cout<<ans<<ln;
+   }
+   //TC: O()
+   //SC: O()
 }
+
 
 int main() {
     ios::sync_with_stdio(false);

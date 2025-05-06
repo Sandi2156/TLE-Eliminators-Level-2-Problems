@@ -42,61 +42,29 @@ typedef vector<vll> vvll;
 typedef double ld;
 
 
-// void solve() {
-//    ll t = 1;
-//    cin>>t;
-//    while(t--) {
-//         ll n, k;
-//         cin>>n>>k;
-
-//         vll arr(n);
-//         for0(i, n) cin>>arr[i];
-
-//         sort(arr.rbegin(), arr.rend());
-
-//         if(arr[0] - arr[n-1] > k+1) cout<<"Jerry"<<ln;
-//         else {
-//             ll sum = 0;
-//             for(auto it: arr) sum += it;
-            
-//             if(sum & 1) cout<<"Tom"<<ln;
-//             else cout<<"Jerry"<<ln;
-//         }
-//    }
-
-//    /*
-//         10 9 1
-//         9 9
-//         8 9
-//         8 8
-//         7 8
-//         7 7
-//         6 7
-//         6 6
-//         5 6
-//         5 5
-//         5 4
-//         4 4
-//         4 3
-//         3 3
-//         3 2
-//         2 2
-//         2 1
-//         1 1
-//         1 0
-//         0 0
-
-        
-//    */
-// }
-
 void solve() {
-    /*
-    
-        gcd -> greatest common divisor
-        
-    */
+   ll t = 1;
+   while(t--) {
+        ll w, h, n;
+        cin>>w>>h>>n;
+
+        ll low = 1, high = 1e18, ans = -1;
+        while(low <= high) {
+            ll mid = (low + high) / 2;
+
+            ll a = mid / h, b = mid / w;
+            if(a >= ceil(n / (b * 1.0))) {
+                ans = mid;
+                high = mid - 1;
+            } else low = mid + 1;
+        }
+
+        cout<<ans<<ln;
+   }
+   //TC: O(O(log1e18))
+   //SC: O(1)
 }
+
 
 int main() {
     ios::sync_with_stdio(false);

@@ -42,61 +42,44 @@ typedef vector<vll> vvll;
 typedef double ld;
 
 
-// void solve() {
-//    ll t = 1;
-//    cin>>t;
-//    while(t--) {
-//         ll n, k;
-//         cin>>n>>k;
+bool isPossible(ll x, ll t, vll &arr) {
+    ll cnt = 0;
+    for(auto it: arr) {
+        cnt += (x / it);
 
-//         vll arr(n);
-//         for0(i, n) cin>>arr[i];
+        if(cnt >= t) return true;
+    }
 
-//         sort(arr.rbegin(), arr.rend());
-
-//         if(arr[0] - arr[n-1] > k+1) cout<<"Jerry"<<ln;
-//         else {
-//             ll sum = 0;
-//             for(auto it: arr) sum += it;
-            
-//             if(sum & 1) cout<<"Tom"<<ln;
-//             else cout<<"Jerry"<<ln;
-//         }
-//    }
-
-//    /*
-//         10 9 1
-//         9 9
-//         8 9
-//         8 8
-//         7 8
-//         7 7
-//         6 7
-//         6 6
-//         5 6
-//         5 5
-//         5 4
-//         4 4
-//         4 3
-//         3 3
-//         3 2
-//         2 2
-//         2 1
-//         1 1
-//         1 0
-//         0 0
-
-        
-//    */
-// }
+    return cnt >= t;
+}
 
 void solve() {
-    /*
-    
-        gcd -> greatest common divisor
-        
-    */
+   ll pt = 1;
+//    cin>>t;
+   while(pt--) {
+        ll n, t;
+        cin>>n>>t;
+
+        vll arr(n);
+        for0(i, n) cin>>arr[i];
+
+        ll low = 1, high = 1e18, ans = -1;
+        while(low <= high) {
+            ll mid = (low + high) / 2;
+
+            if(isPossible(mid, t, arr)) {
+                ans = mid;
+                high = mid - 1;
+            } else low = mid + 1;
+        }
+
+        cout<<ans<<ln;
+
+   }
+   //TC: O()
+   //SC: O()
 }
+
 
 int main() {
     ios::sync_with_stdio(false);

@@ -42,61 +42,23 @@ typedef vector<vll> vvll;
 typedef double ld;
 
 
-// void solve() {
-//    ll t = 1;
-//    cin>>t;
-//    while(t--) {
-//         ll n, k;
-//         cin>>n>>k;
-
-//         vll arr(n);
-//         for0(i, n) cin>>arr[i];
-
-//         sort(arr.rbegin(), arr.rend());
-
-//         if(arr[0] - arr[n-1] > k+1) cout<<"Jerry"<<ln;
-//         else {
-//             ll sum = 0;
-//             for(auto it: arr) sum += it;
-            
-//             if(sum & 1) cout<<"Tom"<<ln;
-//             else cout<<"Jerry"<<ln;
-//         }
-//    }
-
-//    /*
-//         10 9 1
-//         9 9
-//         8 9
-//         8 8
-//         7 8
-//         7 7
-//         6 7
-//         6 6
-//         5 6
-//         5 5
-//         5 4
-//         4 4
-//         4 3
-//         3 3
-//         3 2
-//         2 2
-//         2 1
-//         1 1
-//         1 0
-//         0 0
-
-        
-//    */
-// }
-
 void solve() {
+   ll t = 1;
+   cin>>t;
+   while(t--) {
+
+   }
     /*
-    
-        gcd -> greatest common divisor
-        
-    */
+        bloomDay -> 
+        m
+        k
+        make m bonquets
+        to make bonquets need k adjacent flower from the garden
+   */
+   //TC: O()
+   //SC: O()
 }
+
 
 int main() {
     ios::sync_with_stdio(false);

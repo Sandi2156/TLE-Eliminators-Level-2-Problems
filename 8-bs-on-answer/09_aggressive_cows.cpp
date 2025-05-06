@@ -41,62 +41,47 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
+bool predicateFunc(ll minDistance, vll &arr, ll c) {
+    ll cnt = 1;
+    ll prevCowPos = arr[0];
+    for(int i = 1; i < arr.size(); i++) {
+        if(arr[i] - prevCowPos >= minDistance) {
+            cnt++;
+            prevCowPos = arr[i];
+        }
+    }
 
-// void solve() {
-//    ll t = 1;
-//    cin>>t;
-//    while(t--) {
-//         ll n, k;
-//         cin>>n>>k;
-
-//         vll arr(n);
-//         for0(i, n) cin>>arr[i];
-
-//         sort(arr.rbegin(), arr.rend());
-
-//         if(arr[0] - arr[n-1] > k+1) cout<<"Jerry"<<ln;
-//         else {
-//             ll sum = 0;
-//             for(auto it: arr) sum += it;
-            
-//             if(sum & 1) cout<<"Tom"<<ln;
-//             else cout<<"Jerry"<<ln;
-//         }
-//    }
-
-//    /*
-//         10 9 1
-//         9 9
-//         8 9
-//         8 8
-//         7 8
-//         7 7
-//         6 7
-//         6 6
-//         5 6
-//         5 5
-//         5 4
-//         4 4
-//         4 3
-//         3 3
-//         3 2
-//         2 2
-//         2 1
-//         1 1
-//         1 0
-//         0 0
-
-        
-//    */
-// }
+    return cnt >= c;
+}
 
 void solve() {
-    /*
-    
-        gcd -> greatest common divisor
-        
-    */
+   ll t = 1;
+   cin>>t;
+   while(t--) {
+        ll n, c;
+        cin>>n>>c;
+
+        vll arr(n);
+        for0(i, n) cin>>arr[i];
+
+        sort(arr.begin(), arr.end());
+
+        ll low = 1, high = arr[n-1]-arr[0], ans = -1;
+        while(low <= high) {
+            ll mid = (low + high) / 2;
+
+            if(predicateFunc(mid, arr, c)) {
+                ans = mid;
+                low = mid + 1;
+            } else high = mid - 1;
+        }
+
+        cout<<ans<<ln;
+   }
+   //TC: O(nlogn)
+   //SC: O(1)
 }
+
 
 int main() {
     ios::sync_with_stdio(false);
