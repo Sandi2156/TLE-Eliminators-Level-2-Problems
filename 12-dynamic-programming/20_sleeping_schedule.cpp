@@ -45,42 +45,42 @@ typedef double ld;
 void solve() {
    ll t = 1;
    while(t--) {
-        /*
-            dp[a][b] => minimum no of moves to make every pieces square
+       /*
+            state:
+                dp[i][j] => Maximum no of good sleeping time Vova can have if he has i..n-1 no of sleeps remaining and wakes
+                            up at jth time
+            
+            transition:
+                dp[i][j] = (l <= j + arr[i] - 1 <= r) + dp[i + 1][j + arr[i] - 1] or (l <= j + arr[i] <= r) + dp[i + 1][j + arr[i]]
 
-            transition: dp[a][b] => min(dp[a-1][b], dp[1][b], ...., dp[a][b-1], dp[a][1], ....)
+            base case:
+                if i == n => 0
 
-            base case: if(a == b) return 0;
-        
-        */
+            return dp[0][0]
+       
+       */
 
-        ll a, b; cin >> a >> b;
+        ll n, h, l, r; cin >> n >> h >> l >> r;
+        vll arr(n); for0(i, n) cin >> arr[i];
 
-        vector<vector<ll>> dp(a+1, vector<ll>(b+1, INT_MAX));
-        for(int i = 1; i <= a; i++) {
-            for(int j = 1; j <= b; j++) {
-                if(i == j) dp[i][j] = 0;
-                else {
-                    ll ans = INT_MAX;
-                    ll k = i;
-                    while(--k) {
-                        ans = min(ans, 1 + (dp[k][j] + dp[i - k][j]));
-                    }
-                    k = j;
-                    while(--k) {
-                        ans = min(ans, 1 + (dp[i][k] + dp[i][j - k]));
-                    }
-                    dp[i][j] = min(ans, dp[i][j]);
-                }
+        vector<vector<ll>> dp(n+1, vector<ll>(h, 0));
 
-                // cout << dp[i][j] << " ";
-            } // cout << ln;
+        for(int i = n-1; i >= 0; i--) {
+            for(int j = 0; j < h; j++) {
+                ll t1 = (j + arr[i] - 1) % h;
+                ll p = dp[i + 1][t1] + (t1 >= l && t1 <= r);
+
+                ll t2 = (j + arr[i]) % h;
+                ll q = dp[i + 1][t2] + (t2 >= l && t2 <= r);
+
+                dp[i][j] = max(p, q);
+            }
         }
-
-        cout << dp[a][b] << ln;
+        
+        cout << dp[0][0] << ln;
    }
-   //TC: O(a * b * (a + b))
-   //SC: O(a * b)
+   //TC: O()
+   //SC: O()
 }
 
 

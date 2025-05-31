@@ -44,43 +44,59 @@ typedef double ld;
 
 void solve() {
    ll t = 1;
+   cin>>t;
+   vll operations(1001, INT_MAX);
+    operations[0] = operations[1] = 0;
+    for(ll val = 1; val <= 1000; val++) {
+        for(ll x = 1; x <= val; x++) {
+            ll j = val + (val / x);
+            if(j <= 1000) operations[j] = min(operations[j], 1 + operations[val]);
+        }
+    }
    while(t--) {
         /*
-            dp[a][b] => minimum no of moves to make every pieces square
-
-            transition: dp[a][b] => min(dp[a-1][b], dp[1][b], ...., dp[a][b-1], dp[a][1], ....)
-
-            base case: if(a == b) return 0;
+            This is just like knapsack problem. we just convert it to knapsack
         
         */
+       ll n, k; cin >> n >> k;
+        vll b(n); for0(i, n) cin >> b[i];
+        vll c(n); for0(i, n) cin >> c[i];
 
-        ll a, b; cin >> a >> b;
+        k = min(k, 12 * n);
+        /*
+            dp[i][j] => Maximum no of coins I can earn from an array size i, (0---i) having j operations left
 
-        vector<vector<ll>> dp(a+1, vector<ll>(b+1, INT_MAX));
-        for(int i = 1; i <= a; i++) {
-            for(int j = 1; j <= b; j++) {
-                if(i == j) dp[i][j] = 0;
-                else {
-                    ll ans = INT_MAX;
-                    ll k = i;
-                    while(--k) {
-                        ans = min(ans, 1 + (dp[k][j] + dp[i - k][j]));
-                    }
-                    k = j;
-                    while(--k) {
-                        ans = min(ans, 1 + (dp[i][k] + dp[i][j - k]));
-                    }
-                    dp[i][j] = min(ans, dp[i][j]);
+            dp[i][j] => dp[i-1][j], c[i] + dp[i-1][j-operations[b[i]]]
+            
+            if i == 0
+                dp[0][j >= operations[b[0]]] = c[0]
+
+            dp[n-1][k]
+        
+        */
+       vector<vector<ll>> dp(n, vector<ll>(k+1, 0));
+       for(int i = 0; i < n; i++) {
+            for(int j = 0; j <= k; j++) {
+                if(i == 0) {
+                    if(j >= operations[b[i]]) dp[i][j] = c[i];
+                    continue;
                 }
 
-                // cout << dp[i][j] << " ";
-            } // cout << ln;
-        }
+                // not pick
+                ll noPick = dp[i - 1][j];
 
-        cout << dp[a][b] << ln;
+                // pick
+                ll pick = INT_MIN;
+                if(j - operations[b[i]] >= 0) pick = c[i] + dp[i - 1][j - operations[b[i]]];
+
+                dp[i][j] = max(pick, noPick);
+            }
+       }
+
+       cout << dp[n - 1][k] << ln;
    }
-   //TC: O(a * b * (a + b))
-   //SC: O(a * b)
+   //TC: O()
+   //SC: O()
 }
 
 

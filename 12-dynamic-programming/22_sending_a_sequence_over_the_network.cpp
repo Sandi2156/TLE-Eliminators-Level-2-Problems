@@ -44,43 +44,75 @@ typedef double ld;
 
 void solve() {
    ll t = 1;
+   cin>>t;
    while(t--) {
+        ll n;
+        cin >> n;
+        vector<ll> b(n);
+        for(int i = 0; i < n; i++) cin >> b[i];
+
         /*
-            dp[a][b] => minimum no of moves to make every pieces square
+        
+        dp[i][j] => is it possible to construct sequence from an array (0..i) when j no of elements are not in a sequence
+        
+        dp[i][j] = isTrue(dp[i-1][j+1], j == 0 ? dp[i-arr[i]-1][0] : false, j == arr[i] ? dp[i-1][0] : false)
+        
+        base: dp[0][0] = true
+        
+        dp[n][0]
+        
+        *** This State will give us TLE because n <= 1e5. So we need to minimize the state, can we do this in a single state.
 
-            transition: dp[a][b] => min(dp[a-1][b], dp[1][b], ...., dp[a][b-1], dp[a][1], ....)
+        vector<vector<bool>> dp(n + 1, vector<bool>(n+1, false));
+        dp[0][0] = true;
 
-            base case: if(a == b) return 0;
+        for(int i = 1; i <= n; i++) {
+            for(int j = 0; j <= n; j++) {
+                bool a = dp[i-1][j+1];
+                
+
+                bool c = false;
+                if(j == 0 && (i - b[i-1] - 1) >= 0)
+                    c = dp[i - b[i - 1] - 1][0];
+
+                bool d = false;
+                if(j == b[ i - 1])
+                    d = dp[i - 1][0];
+
+                dp[i][j] = a || c || d;
+            }
+        }
+
+        cout << (dp[n][0] ? "YES" : "NO") << ln;
+
+        */
+
+
+        /*
+            state:
+                dp[i] => is it possible to construct sequence a from array(0..i)
+
+            transition: 
+                1. segment can be at the right
+                2. segment can be at the left
         
         */
 
-        ll a, b; cin >> a >> b;
+        vector<bool> dp(n + 1, false);
+        dp[0] = true;
 
-        vector<vector<ll>> dp(a+1, vector<ll>(b+1, INT_MAX));
-        for(int i = 1; i <= a; i++) {
-            for(int j = 1; j <= b; j++) {
-                if(i == j) dp[i][j] = 0;
-                else {
-                    ll ans = INT_MAX;
-                    ll k = i;
-                    while(--k) {
-                        ans = min(ans, 1 + (dp[k][j] + dp[i - k][j]));
-                    }
-                    k = j;
-                    while(--k) {
-                        ans = min(ans, 1 + (dp[i][k] + dp[i][j - k]));
-                    }
-                    dp[i][j] = min(ans, dp[i][j]);
-                }
+        for(int i = 1; i <= n; i++) {
+            // right
+            if(i + b[i - 1] <= n && dp[i - 1]) dp[i + b[i - 1]] = true;
 
-                // cout << dp[i][j] << " ";
-            } // cout << ln;
+            // left
+            if(i - b[i - 1] >= 1 && dp[i - b[i - 1] - 1]) dp[i] = true;
         }
 
-        cout << dp[a][b] << ln;
+        cout << (dp[n] ? "YES" : "NO") << ln;
    }
-   //TC: O(a * b * (a + b))
-   //SC: O(a * b)
+   //TC: O()
+   //SC: O()
 }
 
 

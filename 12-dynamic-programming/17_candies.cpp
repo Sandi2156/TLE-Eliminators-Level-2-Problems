@@ -41,46 +41,51 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
+ll MOD = 1e9 + 7;
 
 void solve() {
    ll t = 1;
    while(t--) {
+
+
         /*
-            dp[a][b] => minimum no of moves to make every pieces square
-
-            transition: dp[a][b] => min(dp[a-1][b], dp[1][b], ...., dp[a][b-1], dp[a][1], ....)
-
-            base case: if(a == b) return 0;
+            dp[i][j] => no of ways to share candies between first i(0--i) kids if I have j no of candies left
         
+            transition => dp[i][j] = dp[i-1][j] + dp[i-1][j-1] + ... + (arr[i] times)
+
+            base case:
+                i == 0 ? dp[i][0..arr[0]] = 1 
         */
 
-        ll a, b; cin >> a >> b;
+        ll n, k; cin >> n >> k;
+        vll arr(n); for0(i, n) cin >> arr[i];
+        
+        vector<vector<ll>> dp(n, vector<ll>(k+1, 0));
+        vector<ll> prefixSum(k + 1, 0);
 
-        vector<vector<ll>> dp(a+1, vector<ll>(b+1, INT_MAX));
-        for(int i = 1; i <= a; i++) {
-            for(int j = 1; j <= b; j++) {
-                if(i == j) dp[i][j] = 0;
-                else {
-                    ll ans = INT_MAX;
-                    ll k = i;
-                    while(--k) {
-                        ans = min(ans, 1 + (dp[k][j] + dp[i - k][j]));
-                    }
-                    k = j;
-                    while(--k) {
-                        ans = min(ans, 1 + (dp[i][k] + dp[i][j - k]));
-                    }
-                    dp[i][j] = min(ans, dp[i][j]);
+        for(ll i = 0; i < n; i++) {
+            for(ll j = 0; j <= k; j++) {
+                if(i == 0) {
+                    if(j <= arr[i]) dp[i][j] = 1;
+                    continue;
                 }
+                
+                ll p = j - min(arr[i], j);
+                ll ans = prefixSum[j] - (p == 0 ? 0: prefixSum[p - 1]);
 
-                // cout << dp[i][j] << " ";
-            } // cout << ln;
+                dp[i][j] = ans % MOD;
+            }
+            for(ll j = 0; j <= k; j++) {
+                prefixSum[j] = dp[i][j];
+                if(j > 0) prefixSum[j] += prefixSum[j - 1];
+                prefixSum[j] %= MOD;
+            }
         }
 
-        cout << dp[a][b] << ln;
+        cout << dp[n - 1][k] << ln;
    }
-   //TC: O(a * b * (a + b))
-   //SC: O(a * b)
+   //TC: O()
+   //SC: O()
 }
 
 

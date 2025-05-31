@@ -46,41 +46,15 @@ void solve() {
    ll t = 1;
    while(t--) {
         /*
-            dp[a][b] => minimum no of moves to make every pieces square
+            dp[i][j] => longest increasing subsequence of subarray(0..i) when j selected as next item
 
-            transition: dp[a][b] => min(dp[a-1][b], dp[1][b], ...., dp[a][b-1], dp[a][1], ....)
-
-            base case: if(a == b) return 0;
-        
+            dp[i][j] => max(dp[i-1][j], 1 + dp[i-1][arr[i]])                
         */
+        
 
-        ll a, b; cin >> a >> b;
-
-        vector<vector<ll>> dp(a+1, vector<ll>(b+1, INT_MAX));
-        for(int i = 1; i <= a; i++) {
-            for(int j = 1; j <= b; j++) {
-                if(i == j) dp[i][j] = 0;
-                else {
-                    ll ans = INT_MAX;
-                    ll k = i;
-                    while(--k) {
-                        ans = min(ans, 1 + (dp[k][j] + dp[i - k][j]));
-                    }
-                    k = j;
-                    while(--k) {
-                        ans = min(ans, 1 + (dp[i][k] + dp[i][j - k]));
-                    }
-                    dp[i][j] = min(ans, dp[i][j]);
-                }
-
-                // cout << dp[i][j] << " ";
-            } // cout << ln;
-        }
-
-        cout << dp[a][b] << ln;
    }
-   //TC: O(a * b * (a + b))
-   //SC: O(a * b)
+   //TC: O()
+   //SC: O()
 }
 
 
