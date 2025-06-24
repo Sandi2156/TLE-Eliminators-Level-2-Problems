@@ -41,60 +41,52 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-ll t = 20;
+/*
+    dp[i][j] => maximum no of matching if we take j == 1 the current node or j == 0 not take the current node
 
-void dfs(ll node, ll parent, vector<vector<ll>> &adjList, vector<vector<ll>> &binaryLifting, vector<ll> &levelArr, ll level) {
-    
-    binaryLifting[node][0] = parent;
-    levelArr[node] = level;
-    for(int i = 1; i < t; i++) {
-        binaryLifting[node][i] = binaryLifting[binaryLifting[node][i-1]][i-1];
-    }
+*/
 
-    for(auto adjNode: adjList[node]) {
-        if(adjNode != parent) dfs(adjNode, node, adjList, binaryLifting, levelArr, level+1);
-    }
-}
+void dfs(ll node, ll parent, vector<vector<ll>> &adjList, vector<vector<ll>> &dp) {
 
-ll getLCA(ll x, ll y, vector<vector<ll>> &binaryLifting, vector<ll> &levelArr) {
-    if(levelArr[x] < levelArr[y]) return getLCA(y, x, binaryLifting, levelArr);
+    ll notTake = 0, take = 0;
+    for(ll adjNode: adjList[node]) {
+        if(adjNode != parent) {
+            dfs(adjNode, node, adjList, dp);
 
-    ll p = levelArr[x] - levelArr[y];
-    for(int i = 0; i < t; i++) {
-        if(p & (1 << i)) x = binaryLifting[x][i];
-    }
-
-    for(int i = t - 1; i >= 0; i--) {
-        if(binaryLifting[x][i] != binaryLifting[y][i]) {
-            x = binaryLifting[x][i];
-            y = binaryLifting[y][i];
+            notTake += max(dp[adjNode][0], dp[adjNode][1]);
         }
     }
 
-    if(x == y) return x;
-    return binaryLifting[x][0];
+    for(ll adjNode: adjList[node]) {
+        if(adjNode != parent) {
+            take = max(1 + dp[adjNode][0] + notTake - max(dp[adjNode][0], dp[adjNode][1]), take);
+        }
+    }
+
+    dp[node][0] = notTake;
+    dp[node][1] = take;
+
 }
 
 void solve() {
-   ll n, q;
-   cin >> n >> q;
+    ll n;
+    cin >> n;
 
-   vector<vector<ll>> adjList(n+1);
-   for(int i = 2; i <= n; i++) {
-        ll p; cin >> p;
-        adjList[p].push_back(i);
-   }
+    vector<vector<ll>> adjList(n+1);
+    for(int i = 1; i < n; i++) {
+        ll u, v;
+        cin >> u >> v;
 
-   vector<vector<ll>> binaryLifting(n+1, vector<ll>(t, 0));
-   vector<ll> levelArr(n+1, 0);
-   dfs(1, 0, adjList, binaryLifting, levelArr, 0);
+        adjList[u].push_back(v);
+        adjList[v].push_back(u);
+    }
 
-   while(q--) {
-    ll x, y;
-    cin >> x >> y;
-    cout << getLCA(x, y, binaryLifting, levelArr) << ln;
-    
-   }
+    vector<vector<ll>> dp(n+1, vector<ll>(2, 0));
+
+    dfs(1, 0, adjList, dp);
+
+    cout << max(dp[1][0], dp[1][1]) << ln;
+
 
    //TC: O()
    //SC: O()

@@ -41,60 +41,45 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-ll t = 20;
+void dfs(ll node, ll parent, vector<vector<ll>> &adjList, vector<vector<ll>> &parentGrid, ll m) {
 
-void dfs(ll node, ll parent, vector<vector<ll>> &adjList, vector<vector<ll>> &binaryLifting, vector<ll> &levelArr, ll level) {
-    
-    binaryLifting[node][0] = parent;
-    levelArr[node] = level;
-    for(int i = 1; i < t; i++) {
-        binaryLifting[node][i] = binaryLifting[binaryLifting[node][i-1]][i-1];
-    }
-
+    parentGrid[node][0] = parent;
+    for(int i = 1; i <= m; i++) parentGrid[node][i] = parentGrid[parentGrid[node][i-1]][i-1];
     for(auto adjNode: adjList[node]) {
-        if(adjNode != parent) dfs(adjNode, node, adjList, binaryLifting, levelArr, level+1);
+        if(adjNode != parent) dfs(adjNode, node, adjList, parentGrid, m);
     }
-}
+} 
 
-ll getLCA(ll x, ll y, vector<vector<ll>> &binaryLifting, vector<ll> &levelArr) {
-    if(levelArr[x] < levelArr[y]) return getLCA(y, x, binaryLifting, levelArr);
-
-    ll p = levelArr[x] - levelArr[y];
-    for(int i = 0; i < t; i++) {
-        if(p & (1 << i)) x = binaryLifting[x][i];
+ll getKthParent(ll node, ll k, ll m, vector<vector<ll>> &parentGrid) {
+    for(ll i = m; i >= 0; i--) {
+        if((1 << i) & k) node = parentGrid[node][i];
     }
 
-    for(int i = t - 1; i >= 0; i--) {
-        if(binaryLifting[x][i] != binaryLifting[y][i]) {
-            x = binaryLifting[x][i];
-            y = binaryLifting[y][i];
-        }
-    }
-
-    if(x == y) return x;
-    return binaryLifting[x][0];
+    return node;
 }
 
 void solve() {
-   ll n, q;
-   cin >> n >> q;
+    ll n, q; cin >> n >> q;
 
-   vector<vector<ll>> adjList(n+1);
-   for(int i = 2; i <= n; i++) {
-        ll p; cin >> p;
-        adjList[p].push_back(i);
-   }
+    vector<vector<ll>> adjList(n+1);
+    for(int i = 2; i <= n; i++) {
+        ll u; cin >> u;
+        adjList[u].push_back(i);
+    }
 
-   vector<vector<ll>> binaryLifting(n+1, vector<ll>(t, 0));
-   vector<ll> levelArr(n+1, 0);
-   dfs(1, 0, adjList, binaryLifting, levelArr, 0);
+    ll m = 20;
+    vector<vector<ll>> parentGrid(n+1, vector<ll>(m+1, 0));
+    dfs(1, 0, adjList, parentGrid, m);
 
-   while(q--) {
-    ll x, y;
-    cin >> x >> y;
-    cout << getLCA(x, y, binaryLifting, levelArr) << ln;
-    
-   }
+    while(q--) {
+        ll x, k; cin >> x >> k;
+
+        ll kthParent = getKthParent(x, k, m, parentGrid);
+        if(kthParent == 0) cout << -1;
+        else cout << kthParent;
+        cout << ln;
+    }
+
 
    //TC: O()
    //SC: O()

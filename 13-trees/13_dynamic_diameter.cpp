@@ -41,60 +41,69 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-ll t = 20;
 
-void dfs(ll node, ll parent, vector<vector<ll>> &adjList, vector<vector<ll>> &binaryLifting, vector<ll> &levelArr, ll level) {
-    
-    binaryLifting[node][0] = parent;
-    levelArr[node] = level;
-    for(int i = 1; i < t; i++) {
-        binaryLifting[node][i] = binaryLifting[binaryLifting[node][i-1]][i-1];
-    }
+void dfsDistance(ll node, ll parent, vector<vector<ll>> &adjList, vector<ll> &distance) {
 
     for(auto adjNode: adjList[node]) {
-        if(adjNode != parent) dfs(adjNode, node, adjList, binaryLifting, levelArr, level+1);
+        if(adjNode != parent) {
+            distance[adjNode] = 1 + distance[node];
+            dfsDistance(adjNode, node, adjList, distance);
+        }
     }
 }
 
-ll getLCA(ll x, ll y, vector<vector<ll>> &binaryLifting, vector<ll> &levelArr) {
-    if(levelArr[x] < levelArr[y]) return getLCA(y, x, binaryLifting, levelArr);
+pair<ll, set<int>> getDiameter(ll n, vector<vector<ll>> &adjList) {
+    vector<ll> distance(n, 0);
+    dfsDistance(0, -1, adjList, distance);
 
-    ll p = levelArr[x] - levelArr[y];
-    for(int i = 0; i < t; i++) {
-        if(p & (1 << i)) x = binaryLifting[x][i];
-    }
-
-    for(int i = t - 1; i >= 0; i--) {
-        if(binaryLifting[x][i] != binaryLifting[y][i]) {
-            x = binaryLifting[x][i];
-            y = binaryLifting[y][i];
+    int deepestNode = -1;
+    ll maxi = INT_MIN;
+    for(int i = 0; i < n; i++) {
+        if(distance[i] > maxi) {
+            maxi = distance[i];
+            deepestNode = i;
         }
     }
 
-    if(x == y) return x;
-    return binaryLifting[x][0];
+    set<int> deepestNodes;
+    for(int i = 0; i < n; i++) {
+        if(distance[i] == maxi) deepestNodes.insert(i);
+        distance[i] = 0;
+    }
+
+    dfsDistance(deepestNode, -1, adjList, distance);
+    maxi = INT_MIN;
+    for(auto it: distance) {
+        maxi = max(maxi, it);
+    }
+
+    for(int i = 0; i < n; i++) {
+        if(distance[i] == maxi) deepestNodes.insert(i);
+    }
+
+    return {maxi, deepestNodes};
 }
 
 void solve() {
-   ll n, q;
-   cin >> n >> q;
 
-   vector<vector<ll>> adjList(n+1);
-   for(int i = 2; i <= n; i++) {
-        ll p; cin >> p;
-        adjList[p].push_back(i);
-   }
+    ll n; cin >> n;
 
-   vector<vector<ll>> binaryLifting(n+1, vector<ll>(t, 0));
-   vector<ll> levelArr(n+1, 0);
-   dfs(1, 0, adjList, binaryLifting, levelArr, 0);
+    vector<vector<ll>> adjList(n);
+    for(int i = 1; i < n; i++) {
+        ll u, v; cin >> u >> v;
+        u--,v--;
 
-   while(q--) {
-    ll x, y;
-    cin >> x >> y;
-    cout << getLCA(x, y, binaryLifting, levelArr) << ln;
-    
-   }
+        adjList[u].push_back(v);
+        adjList[v].push_back(u);
+    }
+
+    pair<ll, set<int>> ret = getDiameter(n, adjList);
+
+    for(int i = 0; i < n; i++) {
+        if(ret.second.find(i) != ret.second.end()) {
+            cout << ret.first + 1 << ln;
+        } else cout << ret.first << ln;
+    }
 
    //TC: O()
    //SC: O()

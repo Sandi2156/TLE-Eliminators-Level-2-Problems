@@ -41,60 +41,34 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-ll t = 20;
+void dfs(ll node, ll parent, vector<vector<ll>> &adjList, vector<ll> &subTreeSize) {
+    subTreeSize[node] = 1;
 
-void dfs(ll node, ll parent, vector<vector<ll>> &adjList, vector<vector<ll>> &binaryLifting, vector<ll> &levelArr, ll level) {
-    
-    binaryLifting[node][0] = parent;
-    levelArr[node] = level;
-    for(int i = 1; i < t; i++) {
-        binaryLifting[node][i] = binaryLifting[binaryLifting[node][i-1]][i-1];
-    }
-
-    for(auto adjNode: adjList[node]) {
-        if(adjNode != parent) dfs(adjNode, node, adjList, binaryLifting, levelArr, level+1);
-    }
-}
-
-ll getLCA(ll x, ll y, vector<vector<ll>> &binaryLifting, vector<ll> &levelArr) {
-    if(levelArr[x] < levelArr[y]) return getLCA(y, x, binaryLifting, levelArr);
-
-    ll p = levelArr[x] - levelArr[y];
-    for(int i = 0; i < t; i++) {
-        if(p & (1 << i)) x = binaryLifting[x][i];
-    }
-
-    for(int i = t - 1; i >= 0; i--) {
-        if(binaryLifting[x][i] != binaryLifting[y][i]) {
-            x = binaryLifting[x][i];
-            y = binaryLifting[y][i];
+    for(ll adjNode: adjList[node]) {
+        if(adjNode != parent) {
+            dfs(adjNode, node, adjList, subTreeSize);
+            subTreeSize[node] += subTreeSize[adjNode];
         }
     }
-
-    if(x == y) return x;
-    return binaryLifting[x][0];
 }
 
 void solve() {
-   ll n, q;
-   cin >> n >> q;
+    ll n;
+    cin >> n;
 
-   vector<vector<ll>> adjList(n+1);
-   for(int i = 2; i <= n; i++) {
-        ll p; cin >> p;
-        adjList[p].push_back(i);
-   }
+    vector<vector<ll>> adjList(n+1);
 
-   vector<vector<ll>> binaryLifting(n+1, vector<ll>(t, 0));
-   vector<ll> levelArr(n+1, 0);
-   dfs(1, 0, adjList, binaryLifting, levelArr, 0);
+    for(int i = 2; i <= n; i++) {
+        ll u; cin >> u;
+        adjList[u].push_back(i);
+    }
 
-   while(q--) {
-    ll x, y;
-    cin >> x >> y;
-    cout << getLCA(x, y, binaryLifting, levelArr) << ln;
-    
-   }
+    vector<ll> subtreeSize(n+1);
+    dfs(1, 0, adjList, subtreeSize);
+
+    for(int i = 1; i <= n; i++) {
+        cout << subtreeSize[i] - 1 << " ";
+    }
 
    //TC: O()
    //SC: O()
