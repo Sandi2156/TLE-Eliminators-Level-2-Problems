@@ -41,61 +41,81 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-ll t = 20;
-
-void dfs(ll node, ll parent, vector<vector<ll>> &adjList, vector<vector<ll>> &binaryLifting, vector<ll> &levelArr, ll level) {
-    
-    binaryLifting[node][0] = parent;
-    levelArr[node] = level;
-    for(int i = 1; i < t; i++) {
-        binaryLifting[node][i] = binaryLifting[binaryLifting[node][i-1]][i-1];
-    }
-
-    for(auto adjNode: adjList[node]) {
-        if(adjNode != parent) dfs(adjNode, node, adjList, binaryLifting, levelArr, level+1);
-    }
-}
-
-ll getLCA(ll x, ll y, vector<vector<ll>> &binaryLifting, vector<ll> &levelArr) {
-    if(levelArr[x] < levelArr[y]) return getLCA(y, x, binaryLifting, levelArr);
-
-    ll p = levelArr[x] - levelArr[y];
-    for(int i = 0; i < t; i++) {
-        if(p & (1 << i)) x = binaryLifting[x][i];
-    }
-
-    for(int i = t - 1; i >= 0; i--) {
-        if(binaryLifting[x][i] != binaryLifting[y][i]) {
-            x = binaryLifting[x][i];
-            y = binaryLifting[y][i];
-        }
-    }
-
-    if(x == y) return x;
-    return binaryLifting[x][0];
-}
 
 void solve() {
-   ll n, q;
-   cin >> n >> q;
+   ll t = 1;
+   cin>>t;
+   while(t--) {
+        ll n;
+        cin >> n;
 
-   vector<vector<ll>> adjList(n+1);
-   for(int i = 2; i <= n; i++) {
-        ll p; cin >> p;
-        adjList[p].push_back(i);
+        vll arr(n);
+        for(int i = 0; i < n; i++) cin >> arr[i];
+        
+        ll mini = INT_MAX, maxi = INT_MIN, miniIdx = -1, maxiIdx = -1, i = 0;
+        for(auto it: arr) {
+            if(it < mini) {
+                mini = it;
+                miniIdx = i;
+            }
+            if(it > maxi) {
+                maxi = it;
+                maxiIdx = i;
+            }
+            i++;
+        }
+
+        vector<bool> ans(n, false);
+        ans[miniIdx] = true;
+        ans[maxiIdx] = true;
+        ans[0] = true;
+        ans[n-1] = true;
+
+        vector<bool> isDecreasing(n, false);
+        isDecreasing[n-1] = true;
+        maxi = arr[n-1];
+        for(int i = n-2; i >= 0; i--) {
+            if(arr[i] > maxi) {
+                isDecreasing[i] = true;
+            }
+            maxi = max(arr[i], maxi);
+        }
+        vector<ll> minTillNow(n);
+        minTillNow[0] = arr[0];
+        for(int i = 1; i < n; i++) {
+            minTillNow[i] = min(arr[i], minTillNow[i-1]);
+        }
+
+        for(int i = 1; i < n-1; i++) {
+            if(isDecreasing[i] && minTillNow[i-1] < arr[i]) ans[i] = true;
+        }
+
+
+        vector<bool> isDecreasing2(n, false);
+        isDecreasing2[0] = true;
+        mini = arr[0];
+        for(int i = 1; i < n; i++) {
+            if(arr[i] < mini) {
+                isDecreasing2[i] = true;
+            }
+            mini = min(mini, arr[i]);
+        }
+        vector<ll> maxTillNow(n);
+        maxTillNow[n-1] = arr[n-1];
+        for(int i = n-2; i >= 0; i--) {
+            maxTillNow[i] = max(arr[i], maxTillNow[i+1]);
+        }
+
+        for(int i = 1; i < n-1; i++) {
+            if(isDecreasing2[i] && maxTillNow[i+1] > arr[i]) ans[i] = true;
+        }
+
+        for(int i = 0; i < n; i++) {
+            if(ans[i]) cout << 1;
+            else cout << 0;
+        }
+        cout << ln;
    }
-
-   vector<vector<ll>> binaryLifting(n+1, vector<ll>(t, 0));
-   vector<ll> levelArr(n+1, 0);
-   dfs(1, 0, adjList, binaryLifting, levelArr, 0);
-
-   while(q--) {
-    ll x, y;
-    cin >> x >> y;
-    cout << getLCA(x, y, binaryLifting, levelArr) << ln;
-    
-   }
-
    //TC: O()
    //SC: O()
 }
