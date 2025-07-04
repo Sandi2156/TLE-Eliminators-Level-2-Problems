@@ -80,7 +80,7 @@ pair<vector<vector<ll>>, vector<vector<ll>>> kosaraju2(vector<vector<ll>> &adj) 
             adj_rev[v].push_back(i);
     }
 
-    // 3. dfs rev
+    // 3. run dfs based on the order we got previously
     auto dfs_rev = [&](auto &&dfs_rev, ll node, vector<ll> &comp) -> void {
         visited[node] = 1;
         comp.push_back(node);
@@ -97,6 +97,7 @@ pair<vector<vector<ll>>, vector<vector<ll>>> kosaraju2(vector<vector<ll>> &adj) 
             dfs_rev(dfs_rev, i, comp);
             components.push_back(comp);
 
+            // for a component we are taking the smallet element as a root/representeter
             ll root = *min_element(comp.begin(), comp.end());
             for(auto it: comp) roots[it] = root;
         }
