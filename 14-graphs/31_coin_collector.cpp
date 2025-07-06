@@ -42,8 +42,6 @@ typedef vector<vll> vvll;
 typedef double ld;
 
 
-
-
 pair<vector<vector<ll>>, vector<vector<ll>>> kosaraju(ll n, vector<vector<ll>> &adj) {
     /*
         1. Sort the vertices based on finishing time
@@ -116,11 +114,61 @@ pair<vector<vector<ll>>, vector<vector<ll>>> kosaraju(ll n, vector<vector<ll>> &
 }
 
 void solve() {
-   ll t = 1;
-   cin>>t;
-   while(t--) {
-       
-   }
+    ll n, m;
+    cin >> n >> m;
+
+    vector<ll> coins(n+1);
+    for(int i = 1; i <= n; i++) cin >> coins[i];
+
+    vvll adjList(n+1);
+    for(int i = 1; i <= m; i++) {
+        ll u, v;
+        cin >> u >> v;
+
+        adjList[u].push_back(v);
+    }
+
+    auto res = kosaraju(n, adjList);
+
+    vector<vector<ll>> components = res.first, adjCondensation = res.second;
+    vector<ll> totalCoins(n + 1, 0);
+
+    for(auto &comp: components) {
+        ll root = *min_element(comp.begin(), comp.end());
+        for(auto it: comp) {
+            totalCoins[root] += coins[it];
+        }
+    }
+
+    vector<bool> visited(n + 1, false);
+    vector<ll> dp(n+1, 0);
+
+    auto dfs = [&](auto &&dfs, ll node) -> void {
+        visited[node] = true;
+
+        dp[node] = totalCoins[node];
+        ll maxi = 0;
+        for(auto adjNode: adjCondensation[node]) {
+            if(!visited[adjNode]) {
+                dfs(dfs, adjNode);
+            }
+            maxi = max(maxi, dp[adjNode]);
+        }
+
+        dp[node] += maxi;
+    };
+
+    ll ans = 0;
+    for(int i = 1; i <= n; i++) {
+        if(!visited[i]) dfs(dfs, i);
+    }
+    for(int i = 1; i <= n; i++) {
+        ans = max(ans, dp[i]);
+    }
+
+    cout << ans << ln;
+
+
    //TC: O()
    //SC: O()
 }

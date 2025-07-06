@@ -43,7 +43,6 @@ typedef double ld;
 
 
 
-
 pair<vector<vector<ll>>, vector<vector<ll>>> kosaraju(ll n, vector<vector<ll>> &adj) {
     /*
         1. Sort the vertices based on finishing time
@@ -116,11 +115,38 @@ pair<vector<vector<ll>>, vector<vector<ll>>> kosaraju(ll n, vector<vector<ll>> &
 }
 
 void solve() {
-   ll t = 1;
-   cin>>t;
-   while(t--) {
-       
-   }
+    ll n, m;
+    cin >> n >> m;
+
+    vector<vector<ll>> adjList(n + 1);
+    for(int i = 1; i <= m; i++) {
+        ll u, v;
+        cin >> u >> v;
+        adjList[u].push_back(v);
+    }
+
+    auto res = kosaraju(n, adjList);
+
+    vvll components = res.first, adjCondensation = res.second;
+    if(components.size() == 1) {
+        cout << "YES" << ln;
+    } else {
+        cout << "NO" << ln;
+
+        vll comp1 = components[0], comp2 = components[1];
+        ll root1 = *min_element(comp1.begin(), comp1.end()), root2 = *min_element(comp2.begin(), comp2.end());
+        bool found = false;
+        for(auto adjNode: adjCondensation[root1]) {
+            if(adjNode == root2) {
+                found = true;
+                break;
+            }
+        }
+        if(found) cout << root2 << " " << root1;
+        else cout << root1 << " " << root2;
+    }
+
+
    //TC: O()
    //SC: O()
 }

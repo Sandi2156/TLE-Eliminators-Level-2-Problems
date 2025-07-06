@@ -42,8 +42,6 @@ typedef vector<vll> vvll;
 typedef double ld;
 
 
-
-
 pair<vector<vector<ll>>, vector<vector<ll>>> kosaraju(ll n, vector<vector<ll>> &adj) {
     /*
         1. Sort the vertices based on finishing time
@@ -116,11 +114,69 @@ pair<vector<vector<ll>>, vector<vector<ll>>> kosaraju(ll n, vector<vector<ll>> &
 }
 
 void solve() {
-   ll t = 1;
-   cin>>t;
-   while(t--) {
-       
-   }
+    ll n, m;
+    cin >> n >> m;
+
+    vll c(n + 1);
+    for(ll i = 1; i <= n; i++) cin >> c[i];
+
+    vvll adjList(n + 1);
+    for(int i = 1; i <= m; i++) {
+        ll u, v;
+        cin >> u >> v;
+        adjList[u].push_back(v);
+    }
+
+
+    auto res = kosaraju(n, adjList);
+
+    vvll components = res.first, adjCondensation = res.second;
+    vll cCondensation(n + 1, 0);
+
+    for(auto comp: components) {
+        ll gcd = 0;
+        for(auto node: comp) {
+            gcd = __gcd(c[node], gcd);
+        }
+
+        ll root = *min_element(comp.begin(), comp.end());
+        cCondensation[root] = gcd;
+    }
+
+    /*
+        dp[i] -> possible gcds if I start at i
+    
+    */
+
+    vector<set<ll>> dp(n + 1);
+    vector<bool> visited(n + 1, false);
+    auto dfs = [&](auto &&dfs, ll node) -> void {
+        visited[node] = true;
+
+        for(ll adjNode: adjCondensation[node]) {
+            if(!visited[adjNode]) dfs(dfs, adjNode);
+        }
+
+        set<ll> gcd = { c[node] };
+        for(ll adjNode: adjCondensation[node]) {
+            for(auto it: dp[adjNode]) {
+                gcd.insert(__gcd( it, cCondensation[node] ));
+            }
+        }
+        dp[node] = gcd;
+    };
+
+    for(int i = 1; i <= n; i++) {
+        if(!visited[i]) dfs(dfs, i);
+    }
+
+    ll ans = INT_MAX;
+    for(int i = 1; i <= n; i++) {
+        for(auto it: dp[i]) ans = min(ans, it);
+    }
+
+    cout << ans << ln;
+
    //TC: O()
    //SC: O()
 }

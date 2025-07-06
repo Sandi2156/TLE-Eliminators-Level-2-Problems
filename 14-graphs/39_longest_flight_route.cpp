@@ -41,80 +41,57 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-pair<vector<vector<ll>>, vector<vector<ll>>> kosaraju(ll n, vvll &adj) {
-    vvll components, adjCondensation;
+void dfs(ll node, vvll &adjList, vll &dp, vll &child, vector<bool> &visited) {
+    visited[node] = true;
 
-    // 1. sort by finishing time
-
-    vll order;
-    vector<bool> visited(n + 1, false);
-    auto dfs = [&](auto &&dfs, ll node) -> void {
-        visited[node] = true;
-
-        for(ll adjNode: adj[node]) {
-            if(!visited[adjNode]) dfs(dfs, adjNode);
-        }
-
-        order.push_back(node);
-    };
-
-    for(ll i = 1; i <= n; i++) {
-        if(!visited[i]) dfs(dfs, i);
+    for(ll adjNode: adjList[node]) {
+        if(!visited[adjNode]) dfs(adjNode, adjList, dp, child, visited);
     }
 
-    reverse(order.begin(), order.end());
-
-
-    // 2. get transpose of the adj list
-    vvll adj_rev(n + 1);
-    for(int i = 1; i <= n; i++) {
-        for(auto v: adj[i]) {
-            adj_rev[v].push_back(i);
+    ll maxi = 0, childNode = -1;
+    for(ll adjNode: adjList[node]) {
+        if(dp[adjNode] > maxi) {
+            maxi = dp[adjNode];
+            childNode = adjNode;
         }
     }
 
-    // 3. run dfs
-    fill(visited.begin(), visited.end(), false);
-    auto dfs_rev = [&](auto &&dfs_rev, ll node, vll &component) -> void {
-        visited[node] = true;
-        component.push_back(node);
-
-        for(ll adjNode: adj_rev[node]) {
-            if(!visited[adjNode]) dfs_rev(dfs_rev, adjNode, component);
-        }
-
-    };
-
-    vll roots(n + 1);
-    for(auto node: order) {
-        if(!visited[node]) {
-            vll component;
-            dfs_rev(dfs_rev, node, component);
-            components.push_back(component);
-
-            ll root = *min_element(component.begin(), component.end());
-            for(auto it: component) roots[it] = root;
-        }
+    if(maxi > 0) {
+        dp[node] = 1 + maxi;
+        child[node] = childNode;
     }
-
-    // 4. condensation
-    adjCondensation.resize(n + 1);
-    for(int i = 1; i <= n; i++) {
-        for(auto v: adj[i]) {
-            if(roots[i] != roots[v]) adjCondensation[roots[i]].push_back(roots[v]);
-        }
-    }
-
-    return {components, adjCondensation};
 }
 
-
 void solve() {
-   ll t = 1;
-   cin>>t;
-   while(t--) {
-       
-   }
+    ll n, m;
+    cin >> n >> m;
+
+    vvll adjList(n + 1);
+    for(int i = 1; i <= m; i++) {
+        ll u, v;
+        cin >> u >> v;
+
+        adjList[u].push_back(v);
+    }
+
+
+    vll dp(n + 1, 0); dp[n] = 1;
+    vll child(n + 1, -1);
+    vector<bool> visited(n + 1, false);
+    dfs(1, adjList, dp, child, visited);
+
+    if(dp[1] == 0) cout << "IMPOSSIBLE" << ln;
+    else {
+        cout << dp[1] << ln;
+        ll node = 1;
+        while(node != n) {
+            cout << node << " ";
+            node = child[node];
+        }
+        cout << n << ln;
+    }
+
+
    //TC: O()
    //SC: O()
 }

@@ -41,80 +41,84 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-pair<vector<vector<ll>>, vector<vector<ll>>> kosaraju(ll n, vvll &adj) {
-    vvll components, adjCondensation;
 
-    // 1. sort by finishing time
+class DisjointSet {
+    private:
+        ll n;
+        vll parent, size;
 
-    vll order;
-    vector<bool> visited(n + 1, false);
-    auto dfs = [&](auto &&dfs, ll node) -> void {
-        visited[node] = true;
-
-        for(ll adjNode: adj[node]) {
-            if(!visited[adjNode]) dfs(dfs, adjNode);
+    public:
+        DisjointSet(ll n) {
+            this->n = n;
+            parent.resize(n+1);
+            iota(parent.begin(), parent.end(), 0);
+            size.resize(n+1, 1);
         }
 
-        order.push_back(node);
-    };
-
-    for(ll i = 1; i <= n; i++) {
-        if(!visited[i]) dfs(dfs, i);
-    }
-
-    reverse(order.begin(), order.end());
-
-
-    // 2. get transpose of the adj list
-    vvll adj_rev(n + 1);
-    for(int i = 1; i <= n; i++) {
-        for(auto v: adj[i]) {
-            adj_rev[v].push_back(i);
-        }
-    }
-
-    // 3. run dfs
-    fill(visited.begin(), visited.end(), false);
-    auto dfs_rev = [&](auto &&dfs_rev, ll node, vll &component) -> void {
-        visited[node] = true;
-        component.push_back(node);
-
-        for(ll adjNode: adj_rev[node]) {
-            if(!visited[adjNode]) dfs_rev(dfs_rev, adjNode, component);
+        ll getParent(ll u) {
+            if(u == parent[u]) return u;
+            return parent[u] = getParent(parent[u]);
         }
 
-    };
-
-    vll roots(n + 1);
-    for(auto node: order) {
-        if(!visited[node]) {
-            vll component;
-            dfs_rev(dfs_rev, node, component);
-            components.push_back(component);
-
-            ll root = *min_element(component.begin(), component.end());
-            for(auto it: component) roots[it] = root;
+        bool isInSameComponent(ll u, ll v) {
+            return getParent(u) == getParent(v);
         }
-    }
 
-    // 4. condensation
-    adjCondensation.resize(n + 1);
-    for(int i = 1; i <= n; i++) {
-        for(auto v: adj[i]) {
-            if(roots[i] != roots[v]) adjCondensation[roots[i]].push_back(roots[v]);
+        void merge(ll u, ll v) {
+            if(isInSameComponent(u, v)) return;
+
+            ll parU = getParent(u), parV = getParent(v);
+            if(size[parU] > size[parV]) {
+                size[parU] += size[parV];
+                parent[parV] = parU;
+            } else {
+                size[parV] += size[parU];
+                parent[parU] = parV;
+            }
         }
-    }
-
-    return {components, adjCondensation};
-}
+};
 
 
 void solve() {
-   ll t = 1;
-   cin>>t;
-   while(t--) {
-       
-   }
+    ll n;
+    cin >> n;
+
+    DisjointSet dsu(n);
+
+    vector<ll> qual(n+1);
+    for(int i = 1; i <= n; i++) cin >> qual[i];
+
+    ll m;
+    cin >> m;
+    vector<pair<ll, pair<ll, ll>>> edges;
+    for(int i = 1; i <= m; i++) {
+        ll u, v, wt;
+        cin >> u >> v >> wt;
+        edges.push_back({wt, {u, v}});
+    }
+
+    vector<ll> supervisor(n + 1, -1);
+    sort(edges.begin(), edges.end());
+
+    ll cost = 0;
+    for(auto it: edges) {
+        ll wt = it.first, u = it.second.first, v = it.second.second;
+        if(dsu.isInSameComponent(u, v)) continue;
+        if(supervisor[v] != -1) continue;
+        if(qual[u] < qual[v]) continue;
+
+        dsu.merge(u, v);
+        cost += wt;
+        supervisor[v] = u;
+    }
+
+    ll cnt = 0;
+    for(int i = 1; i <= n; i++) if(supervisor[i] == -1) cnt++;
+
+    if(cnt > 1) cout << -1 << ln;
+    else cout << cost << ln;
+
+
    //TC: O()
    //SC: O()
 }

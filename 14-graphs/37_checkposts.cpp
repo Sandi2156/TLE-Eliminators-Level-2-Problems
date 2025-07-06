@@ -43,7 +43,6 @@ typedef double ld;
 
 
 
-
 pair<vector<vector<ll>>, vector<vector<ll>>> kosaraju(ll n, vector<vector<ll>> &adj) {
     /*
         1. Sort the vertices based on finishing time
@@ -116,11 +115,42 @@ pair<vector<vector<ll>>, vector<vector<ll>>> kosaraju(ll n, vector<vector<ll>> &
 }
 
 void solve() {
-   ll t = 1;
-   cin>>t;
-   while(t--) {
-       
-   }
+    ll n;
+    cin >> n;
+
+    vll costs(n + 1);
+    for(int i = 1; i <= n; i++) cin >> costs[i];
+
+    ll m;
+    cin >> m;
+    vvll adjList(n + 1);
+    for(int i = 1; i <= m; i++) {
+        ll u, v;
+        cin >> u >> v;
+        adjList[u].push_back(v);
+    }
+
+    auto res = kosaraju(n, adjList);
+    vvll components = res.first, adjCondensation = res.second;
+
+    ll minCost = 0, ways = 1;
+    ll MOD = 1e9 + 7;
+    vector<map<ll, ll>> costPerComponentMap(components.size());
+
+    for(int i = 0; i < components.size(); i++) {
+        for(auto it: components[i]) {
+            costPerComponentMap[i][costs[it]]++;
+        }
+    }
+
+    for(auto it: costPerComponentMap) {
+        minCost += (it.begin()->first);
+        ways *= (it.begin()->second);
+        ways %= MOD;
+    }
+
+    cout << minCost << " " << ways << ln;
+
    //TC: O()
    //SC: O()
 }
