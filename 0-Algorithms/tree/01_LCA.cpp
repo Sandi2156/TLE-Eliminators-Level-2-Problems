@@ -41,25 +41,6 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-void shortestDistance(ll src, ll n, vvll &adjList) {
-    vector<ll> distance(n + 1, -1);
-    distance[src] = 0;
-
-    queue<pair<ll, ll>> que;
-    que.push({0, src});
-
-    while(!que.empty()) {
-        auto node = que.front();
-        que.pop();
-
-        for(auto adjNode: adjList[node.second]) {
-            if(distance[adjNode] == -1) {
-                distance[adjNode] = node.first + 1;
-                que.push({ distance[adjNode], adjNode });
-            }
-        }
-    }
-}
 
 void solve() {
    ll t = 1;

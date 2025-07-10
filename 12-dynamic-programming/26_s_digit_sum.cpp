@@ -41,32 +41,37 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-void shortestDistance(ll src, ll n, vvll &adjList) {
-    vector<ll> distance(n + 1, -1);
-    distance[src] = 0;
+ll MOD = 1e9 + 7;
 
-    queue<pair<ll, ll>> que;
-    que.push({0, src});
-
-    while(!que.empty()) {
-        auto node = que.front();
-        que.pop();
-
-        for(auto adjNode: adjList[node.second]) {
-            if(distance[adjNode] == -1) {
-                distance[adjNode] = node.first + 1;
-                que.push({ distance[adjNode], adjNode });
-            }
-        }
+ll f(ll index, int tight, ll sumTillNow, string &k, ll d, vector<vector<vector<ll>>> &dp) {
+    int n = k.size();
+    if(index == n) {
+        if(sumTillNow % d == 0) return 1;
+        return 0;
     }
+
+    if(dp[index][tight][sumTillNow] != -1) return dp[index][tight][sumTillNow];
+
+    ll bound = tight ? (k[index] - '0') : 9;
+    ll ans = 0;
+    for(int j = 0; j <= bound; j++) {
+        ans = (ans + f(index+1, tight && ((k[index] - '0') == j), (sumTillNow + j) % d, k, d, dp)) % MOD;
+    }
+
+    return dp[index][tight][sumTillNow] = ans;
 }
 
 void solve() {
-   ll t = 1;
-   cin>>t;
-   while(t--) {
-       
-   }
+    string k;
+    cin >> k;
+
+    ll d;
+    cin >> d;
+
+    vector<vector<vector<ll>>> dp(k.size(), vector<vector<ll>>(2, vector<ll>(d + 1, -1)));
+
+    cout << f(0, 1, 0, k, d, dp) - 1 << ln;
+
    //TC: O()
    //SC: O()
 }

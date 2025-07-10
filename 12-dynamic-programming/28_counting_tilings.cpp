@@ -41,34 +41,64 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-void shortestDistance(ll src, ll n, vvll &adjList) {
-    vector<ll> distance(n + 1, -1);
-    distance[src] = 0;
+ll MOD = 1e9 + 7;
 
-    queue<pair<ll, ll>> que;
-    que.push({0, src});
-
-    while(!que.empty()) {
-        auto node = que.front();
-        que.pop();
-
-        for(auto adjNode: adjList[node.second]) {
-            if(distance[adjNode] == -1) {
-                distance[adjNode] = node.first + 1;
-                que.push({ distance[adjNode], adjNode });
-            }
-        }
+ll func(ll i, ll mask, ll n, vector<vector<ll>> &transitions, vector<vector<ll>> &dp) {
+    if(i == n) {
+        return mask == 0;
     }
+
+    if(dp[i][mask] != -1) return dp[i][mask];
+
+    ll ways = 0;
+    for(auto transition: transitions[mask]) {
+        ways = (ways + func(i + 1, transition, n, transitions, dp)) % MOD;
+    }
+
+    return dp[i][mask] = ways;
+}
+
+void generateTransitions(ll i, ll n, ll mask1, ll mask2, vector<vector<ll>> &transitions) {
+    if(i > n) return;
+    if(i == n) {
+        transitions[mask1].push_back(mask2);
+        return;
+    }
+
+    // if there is alreay one
+    generateTransitions(i+1, n, mask1 | (1 << i), mask2, transitions);
+
+    // build 1
+    generateTransitions(i+1, n, mask1, mask2 | (1 << i), transitions);
+
+    // build 2
+    generateTransitions(i+2, n, mask1, mask2, transitions);
 }
 
 void solve() {
-   ll t = 1;
-   cin>>t;
-   while(t--) {
-       
-   }
-   //TC: O()
-   //SC: O()
+    /*
+        dp[i][mask] => number of ways we can fill the matrix if I am at index i and the state of current row is mask
+
+        dp[i][mask] => sum(dp[i+1][all mask for possible for current mask])
+    
+        if(i == n) return mask == 0;
+    
+    */
+
+    ll n, m;
+    cin >> n >> m;
+
+    // m - row, n col
+    vector<vector<ll>> transitions(1 << n);
+    generateTransitions(0, n, 0, 0, transitions);
+
+    vector<vector<ll>> dp(m + 1, vector<ll>(1 << n, -1));
+    cout << func(0, 0, m, transitions, dp) << ln;
+
+
+
+   //TC: O(3**n * m + m * 2**n)
+   //SC: O(2**n*3**n + m*2**n)
 }
 
 

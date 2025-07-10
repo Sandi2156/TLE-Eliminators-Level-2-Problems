@@ -41,32 +41,49 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-void shortestDistance(ll src, ll n, vvll &adjList) {
-    vector<ll> distance(n + 1, -1);
-    distance[src] = 0;
 
-    queue<pair<ll, ll>> que;
-    que.push({0, src});
-
-    while(!que.empty()) {
-        auto node = que.front();
-        que.pop();
-
-        for(auto adjNode: adjList[node.second]) {
-            if(distance[adjNode] == -1) {
-                distance[adjNode] = node.first + 1;
-                que.push({ distance[adjNode], adjNode });
-            }
-        }
+ll f(ll index, int tight, string &k, vector<vector<ll>> &dp) {
+    int n = k.size();
+    if(index == n) {
+        return 1;
     }
+
+    if(dp[index][tight] != -1) return dp[index][tight];
+    // cout << index << k << ln;
+
+    ll bound = tight ? (k[index] - '0') : 9;
+    ll ans = 0;
+    for(int j = 0; j <= bound; j++) {
+        if((((index & 1) == 1) && ((j & 1) == 1)) || (((index & 1) == 0) && ((j & 1) == 0)))
+            ans = ans + f(index+1, tight && ((k[index] - '0') == j), k,  dp);
+        
+    }
+
+    return dp[index][tight] = ans;
+}
+
+int isValid(string L) {
+    for(int i = 0; i < L.length(); i++) {
+        int digit = L[i] - '0';
+        if((((i & 1) == 0) && ((digit & 1) == 0)) || (((i & 1) == 1) && ((digit & 1) == 1))) continue;
+        else return 0;
+    }
+
+    return 1;
 }
 
 void solve() {
-   ll t = 1;
-   cin>>t;
-   while(t--) {
-       
-   }
+    string L, R;
+    cin >> L >> R;
+
+    vector<vector<ll>> dp1(R.length(), vector<ll>(2, -1)), dp2(L.length(), vector<ll>(2, -1));
+    ll ansR = f(0, 1, R, dp1), ansL = f(0, 1, L, dp2);
+
+
+
+    ll ans = ansR - ansL + (isValid(L));
+    cout << ans << ln;
+
    //TC: O()
    //SC: O()
 }

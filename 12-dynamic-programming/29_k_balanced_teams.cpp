@@ -41,32 +41,52 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-void shortestDistance(ll src, ll n, vvll &adjList) {
-    vector<ll> distance(n + 1, -1);
-    distance[src] = 0;
+map<ll, ll> getMaxTeam(ll n, vll &arr) {
+    map<ll, ll> mp;
 
-    queue<pair<ll, ll>> que;
-    que.push({0, src});
-
-    while(!que.empty()) {
-        auto node = que.front();
-        que.pop();
-
-        for(auto adjNode: adjList[node.second]) {
-            if(distance[adjNode] == -1) {
-                distance[adjNode] = node.first + 1;
-                que.push({ distance[adjNode], adjNode });
-            }
-        }
+    for(int i = 0; i < n; i++) {
+        int j = upper_bound(arr.begin() + i, arr.end(), arr[i] + 5) - arr.begin();
+        mp[i] = j - 1;
     }
+
+    return mp;
+}
+
+ll func(ll i, ll k, ll n, map<ll, ll> &mp, vector<vector<ll>> &dp) {
+    if(i == n || k == 0) return 0;
+
+    if(dp[i][k] != -1) return dp[i][k];
+
+    // not take
+    ll nt = func(i+1, k, n, mp, dp);
+
+    // take
+    ll t = (mp[i] - i + 1) + func(mp[i] + 1, k - 1, n, mp, dp);
+
+    return dp[i][k] = max(t, nt);
 }
 
 void solve() {
-   ll t = 1;
-   cin>>t;
-   while(t--) {
-       
-   }
+    /*
+        dp[i][k] => maximum no of students we can accomodate when I have i...n array and k number of groups remaining
+
+        dp[i][k] => max(dp[i+1][k], p-i+1 + dp[i+p][k-1])
+
+        k == 0 => 0, i == n => 0
+    
+    */
+    ll n, k;
+    cin >> n >> k;
+
+    vll arr(n);
+    for(int i = 0; i < n; i++) cin >> arr[i];
+    sort(arr.begin(), arr.end());
+
+    map<ll, ll> mp = getMaxTeam(n, arr);
+    
+    vector<vector<ll>> dp(n, vector<ll>(k + 1, -1));
+    cout << func(0, k, n, mp, dp) << ln;
+
    //TC: O()
    //SC: O()
 }

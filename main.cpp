@@ -41,80 +41,54 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-pair<vector<vector<ll>>, vector<vector<ll>>> kosaraju(ll n, vvll &adj) {
-    vvll components, adjCondensation;
+int maxAncestorCount = 20;
 
-    // 1. sort by finishing time
+void dfs(ll node, ll parent, vvll &adjList, vvll &ancestorsMatrix) {
 
-    vll order;
-    vector<bool> visited(n + 1, false);
-    auto dfs = [&](auto &&dfs, ll node) -> void {
-        visited[node] = true;
-
-        for(ll adjNode: adj[node]) {
-            if(!visited[adjNode]) dfs(dfs, adjNode);
-        }
-
-        order.push_back(node);
-    };
-
-    for(ll i = 1; i <= n; i++) {
-        if(!visited[i]) dfs(dfs, i);
+    ancestorsMatrix[node][0] = parent;
+    for(int i = 1; i < maxAncestorCount; i++) {
+        ancestorsMatrix[node][i] = ancestorsMatrix[ancestorsMatrix[node][i-1]][i-1];
     }
 
-    reverse(order.begin(), order.end());
-
-
-    // 2. get transpose of the adj list
-    vvll adj_rev(n + 1);
-    for(int i = 1; i <= n; i++) {
-        for(auto v: adj[i]) {
-            adj_rev[v].push_back(i);
-        }
+    for(ll adjNode: adjList[node]) {
+        if(adjNode != parent)
+            dfs(adjNode, node, adjList, ancestorsMatrix);
     }
-
-    // 3. run dfs
-    fill(visited.begin(), visited.end(), false);
-    auto dfs_rev = [&](auto &&dfs_rev, ll node, vll &component) -> void {
-        visited[node] = true;
-        component.push_back(node);
-
-        for(ll adjNode: adj_rev[node]) {
-            if(!visited[adjNode]) dfs_rev(dfs_rev, adjNode, component);
-        }
-
-    };
-
-    vll roots(n + 1);
-    for(auto node: order) {
-        if(!visited[node]) {
-            vll component;
-            dfs_rev(dfs_rev, node, component);
-            components.push_back(component);
-
-            ll root = *min_element(component.begin(), component.end());
-            for(auto it: component) roots[it] = root;
-        }
-    }
-
-    // 4. condensation
-    adjCondensation.resize(n + 1);
-    for(int i = 1; i <= n; i++) {
-        for(auto v: adj[i]) {
-            if(roots[i] != roots[v]) adjCondensation[roots[i]].push_back(roots[v]);
-        }
-    }
-
-    return {components, adjCondensation};
 }
 
+ll getKthAncestor(ll k, ll node, vvll &ancestorsMatrix) {
+
+    for(int i = 0; i < maxAncestorCount; i++) {
+        if(k & (1 << i)) node = ancestorsMatrix[node][i];
+    }
+
+    return node;
+}
 
 void solve() {
-   ll t = 1;
-   cin>>t;
-   while(t--) {
-       
-   }
+    ll n, q;
+    cin >> n >> q;
+
+    vvll adjList(n + 1);
+    for(int i = 2; i <= n; i++) {
+        ll u; cin >> u;
+
+        adjList[u].push_back(i);
+    }
+
+    vvll ancestorMatrix(n + 1, vll(maxAncestorCount, 0));
+    dfs(1, 0, adjList, ancestorMatrix);
+
+    for(int i = 1; i <= q; i++) {
+        ll x, k;
+        cin >> x >> k;
+
+        ll boss = getKthAncestor(k, x, ancestorMatrix);
+        if(boss == 0) cout << -1 << ln;
+        else cout << boss << ln;
+    }
+
+
    //TC: O()
    //SC: O()
 }

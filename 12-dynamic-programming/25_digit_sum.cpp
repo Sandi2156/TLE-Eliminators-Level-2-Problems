@@ -41,33 +41,33 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-void shortestDistance(ll src, ll n, vvll &adjList) {
-    vector<ll> distance(n + 1, -1);
-    distance[src] = 0;
-
-    queue<pair<ll, ll>> que;
-    que.push({0, src});
-
-    while(!que.empty()) {
-        auto node = que.front();
-        que.pop();
-
-        for(auto adjNode: adjList[node.second]) {
-            if(distance[adjNode] == -1) {
-                distance[adjNode] = node.first + 1;
-                que.push({ distance[adjNode], adjNode });
-            }
-        }
+int f(int i, int tight, int sumTillNow, string &range, int desiredSum, vector<vector<vector<int>>> &dp) {
+    int n = range.size();
+    if(i == n) {
+        if(sumTillNow == desiredSum) return 1;
+        return 0;
     }
+
+    if(dp[i][tight][sumTillNow] != -1) return dp[i][tight][sumTillNow];
+
+    int bound = tight ? (range[i] - '0') : 9;
+
+    int count = 0;
+    for(int j = 0; j <= bound; j++) {
+        count += f(i+1, tight && (j == (range[i] - '0')), sumTillNow + j, range, desiredSum, dp);
+    }
+
+    return dp[i][tight][sumTillNow] = count;
 }
 
 void solve() {
-   ll t = 1;
-   cin>>t;
-   while(t--) {
-       
-   }
-   //TC: O()
+    string range = "100000000000000000";
+    int sum = 90;
+
+    vector<vector<vector<int>>> dp(range.size(), vector<vector<int>>(2, vector<int>(sum+1, -1)));
+    cout << f(0, 1, 0, range, sum, dp) << ln;
+
+   //TC: O(n * 2 * sum * 10)
    //SC: O()
 }
 

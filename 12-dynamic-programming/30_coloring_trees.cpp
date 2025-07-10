@@ -41,32 +41,42 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-void shortestDistance(ll src, ll n, vvll &adjList) {
-    vector<ll> distance(n + 1, -1);
-    distance[src] = 0;
-
-    queue<pair<ll, ll>> que;
-    que.push({0, src});
-
-    while(!que.empty()) {
-        auto node = que.front();
-        que.pop();
-
-        for(auto adjNode: adjList[node.second]) {
-            if(distance[adjNode] == -1) {
-                distance[adjNode] = node.first + 1;
-                que.push({ distance[adjNode], adjNode });
-            }
-        }
+ll func(ll i, ll prevColor, ll k, vector<vector<ll>> &paintCost, vector<ll> &trees, ll n, ll m) {
+    if(i == n) {
+        cout << i << " " << prevColor << " " << k << ln;
+        if(k == 1) return 0;
+        return 1e5;
     }
+    if(k <= 0) return 1e5;
+
+    if(trees[i] != 0) return func(i + 1, trees[i], (trees[i] == prevColor || i == 0) ? k : k - 1, paintCost, trees, n, m);
+
+    ll minCost = 1e5;
+    for(int j = 1; j <= m; j++) {
+        ll cost = paintCost[i][j] + func(i + 1, j, (j == prevColor || i == 0) ? k : k - 1, paintCost, trees, n, m);
+        minCost = min(minCost, cost);
+    }
+
+    cout << i << " " << prevColor << " " << k << " " << minCost << ln;
+
+    return minCost;
 }
 
 void solve() {
-   ll t = 1;
-   cin>>t;
-   while(t--) {
-       
-   }
+
+    ll n, m, k;
+    cin >> n >> m >> k;
+
+    vector<ll> trees(n);
+    for(int i = 0; i < n; i++) cin >> trees[i];
+
+    vector<vector<ll>> paintCost(n, vector<ll>(m));
+    for(int i = 0; i < n; i++)
+        for(int j = 0; j < m; j++)
+            cin >> paintCost[i][j];
+
+    cout << func(0, -1, k, paintCost, trees, n, m) << ln;
+   
    //TC: O()
    //SC: O()
 }
