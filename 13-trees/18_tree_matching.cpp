@@ -41,39 +41,33 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-/*
-    dp[i][j] => maximum no of matching if we take j == 1 the current node or j == 0 not take the current node
+void func(ll node, ll parent, vvll &adjList, vector<vector<ll>> &dp) {
 
-*/
-
-void dfs(ll node, ll parent, vector<vector<ll>> &adjList, vector<vector<ll>> &dp) {
-
-    ll notTake = 0, take = 0;
+    ll nt = 0;
     for(ll adjNode: adjList[node]) {
         if(adjNode != parent) {
-            dfs(adjNode, node, adjList, dp);
+            func(adjNode, node, adjList, dp);
 
-            notTake += max(dp[adjNode][0], dp[adjNode][1]);
+            nt += dp[adjNode][1];
         }
     }
 
+    ll t = 0;
     for(ll adjNode: adjList[node]) {
         if(adjNode != parent) {
-            take = max(1 + dp[adjNode][0] + notTake - max(dp[adjNode][0], dp[adjNode][1]), take);
+            t = max(t, 1 + dp[adjNode][0] + nt - dp[adjNode][1]);
         }
     }
 
-    dp[node][0] = notTake;
-    dp[node][1] = take;
-
+    dp[node][0] = nt;
+    dp[node][1] = t;
 }
 
 void solve() {
-    ll n;
-    cin >> n;
+    ll n; cin >> n;
+    vvll adjList(n + 1);
 
-    vector<vector<ll>> adjList(n+1);
-    for(int i = 1; i < n; i++) {
+    for(ll i = 1; i < n; i++) {
         ll u, v;
         cin >> u >> v;
 
@@ -81,12 +75,10 @@ void solve() {
         adjList[v].push_back(u);
     }
 
-    vector<vector<ll>> dp(n+1, vector<ll>(2, 0));
-
-    dfs(1, 0, adjList, dp);
+    vector<vector<ll>> dp(n + 1, vector<ll>(2, 0));
+    func(1, -1, adjList, dp);
 
     cout << max(dp[1][0], dp[1][1]) << ln;
-
 
    //TC: O()
    //SC: O()

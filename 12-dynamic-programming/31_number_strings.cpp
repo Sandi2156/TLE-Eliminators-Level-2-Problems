@@ -41,45 +41,76 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-void func(ll node, ll parent, vvll &adjList, vector<vector<ll>> &dp) {
+string str = "0100";
 
-    ll nt = 0;
-    for(ll adjNode: adjList[node]) {
-        if(adjNode != parent) {
-            func(adjNode, node, adjList, dp);
+ll countStringsWithoutSubsequence(ll i, ll j, ll n, vvll &dp) {
+    /*
+        dp[i][j] => number of strings [0..i] which doesn't have [0..j] as subsequence
 
-            nt += dp[adjNode][1];
+        dp[i][j] => dp[i-1][j] + dp[i-1][j-1]
+
+        if(j < 0) return 0;
+        if(i < 0) return 1
+    
+    */
+
+    if(j < 0) return 0;
+    if(i < 0) return 1;
+
+    if(dp[i][j] != -1) return dp[i][j];
+
+    return dp[i][j] = countStringsWithoutSubsequence(i-1, j, n, dp) + countStringsWithoutSubsequence(i-1, j-1, n, dp);
+
+
+    /*
+        vector<vector<ll>> dp(n+1, vector<ll>(str.size()+1));
+
+        for(int i = 0; i <= n; i++) dp[i][0] = 0;
+        for(int j = 1; j <= str.size(); j++) dp[0][j] = 1;
+
+        for(int i = 1; i <= n; i++) {
+            for(int j = 1; j <= str.size(); j++) {
+                dp[i][j] = dp[i-1][j] + dp[i-1][j-1];
+            }
         }
-    }
+    
+    */
 
-    ll t = 0;
-    for(ll adjNode: adjList[node]) {
-        if(adjNode != parent) {
-            t = max(t, 1 + dp[adjNode][0] + nt - dp[adjNode][1]);
-        }
-    }
-
-    dp[node][0] = nt;
-    dp[node][1] = t;
 }
 
+ll countStringsWithoutSubstring(ll i, ll j, ll n, vvll &dp) {
+
+    /*
+        dp[i][j] => number of strings of [0..i] where I have already selected till j-1 th item froms tr
+
+        dp[i][j] => if same selected dp[i-1][j-1] else j == m-1 ? dp[i-1][m-1], j == m-2 ? dp[i-1][m-1], j == m-3 ? dp[i-1][m-3], 
+                    if j == m-4 ? dp[i-1][m-1]
+                    
+        if(j < 0) return 0
+        if(i < 0) return 1
+    
+    */
+
+    if(j < 0) return 0;
+    if(i < 1) return 1;
+
+    if(dp[i][j] != -1) return dp[i][j];
+
+    dp[i][j] = countStringsWithoutSubstring(i-1, j-1, n, dp);
+    ll p = 0;
+    if(j == str.size()-1 || j == str.size()-3) dp[i][j] += countStringsWithoutSubsequence(i-1, j, n, dp);
+    else if(j == str.size()-2 || j == str.size()-4) dp[i][j] += countStringsWithoutSubstring(i-1, j+1, n, dp);
+
+    return dp[i][j];
+}
+
+
 void solve() {
-    ll n; cin >> n;
-    vvll adjList(n + 1);
-
-    for(ll i = 1; i < n; i++) {
-        ll u, v;
-        cin >> u >> v;
-
-        adjList[u].push_back(v);
-        adjList[v].push_back(u);
-    }
-
-    vector<vector<ll>> dp(n + 1, vector<ll>(2, 0));
-    func(1, -1, adjList, dp);
-
-    cout << max(dp[1][0], dp[1][1]) << ln;
-
+   ll t = 1;
+   cin>>t;
+   while(t--) {
+       
+   }
    //TC: O()
    //SC: O()
 }

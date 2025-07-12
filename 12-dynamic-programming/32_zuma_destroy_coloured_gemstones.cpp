@@ -41,44 +41,52 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
-void func(ll node, ll parent, vvll &adjList, vector<vector<ll>> &dp) {
+ll func(ll i, ll j, vll &arr, vvll &dp) {
+    /*
+        It comes under L..R DP
 
-    ll nt = 0;
-    for(ll adjNode: adjList[node]) {
-        if(adjNode != parent) {
-            func(adjNode, node, adjList, dp);
+        dp[i][j] => Minimum number of seconds needed to delete substring i...j
 
-            nt += dp[adjNode][1];
+        dp[i][j] => min {
+            - 1 + dp[i+1][j] => when we delete a single item
+            - min(dp[i+1][k-1]) => when arr[i] matches with arr[k]. The idea is we can delete this arr[i] and arr[k] with 
+                                    the last delete of substring i+1...k-1
+            - 1 + dp[i+2][j] when arr[i] == arr[i+1]
         }
-    }
 
-    ll t = 0;
-    for(ll adjNode: adjList[node]) {
-        if(adjNode != parent) {
-            t = max(t, 1 + dp[adjNode][0] + nt - dp[adjNode][1]);
-        }
-    }
+        i == j => 1
+        i > j => 0
+    
+    */
 
-    dp[node][0] = nt;
-    dp[node][1] = t;
+    if(i == j) return 1;
+    if(i > j) return 0;
+
+    if(dp[i][j] != -1) return dp[i][j];
+
+    ll a = 1 + func(i + 1, j, arr, dp);
+    ll b = 1e9;
+    for(int k = i+2; k <= j; k++) {
+        if(arr[i] == arr[k]) b = min(b, func(i + 1, k - 1, arr, dp) + func(k + 1, j, arr, dp));
+    }
+    ll c = 1e9;
+    if(i+1 < arr.size() && arr[i] == arr[i+1]) c = 1 + func(i + 2, j, arr, dp);
+
+    // cout << i << " " << j << " " << a << " " << b << " " << c << ln; 
+
+    return dp[i][j] = min(a, min(b, c));
 }
 
 void solve() {
-    ll n; cin >> n;
-    vvll adjList(n + 1);
+    ll n;
+    cin >> n;
 
-    for(ll i = 1; i < n; i++) {
-        ll u, v;
-        cin >> u >> v;
+    vll arr(n);
+    for(int i = 0; i < n; i++) cin >> arr[i];
 
-        adjList[u].push_back(v);
-        adjList[v].push_back(u);
-    }
+    vvll dp(n, vll(n, -1));
 
-    vector<vector<ll>> dp(n + 1, vector<ll>(2, 0));
-    func(1, -1, adjList, dp);
-
-    cout << max(dp[1][0], dp[1][1]) << ln;
+    cout << func(0, n-1, arr, dp) << ln;
 
    //TC: O()
    //SC: O()

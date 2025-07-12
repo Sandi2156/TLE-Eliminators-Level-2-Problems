@@ -41,13 +41,79 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef double ld;
 
+ll Y = 20;
+
+class LCA {
+    private:
+        vector<vector<ll>> parentGrid;
+        vector<ll> level;
+        ll n;
+        vector<vector<ll>> adjList;
+
+        void populateParentGrid(ll node, ll parent, ll curLevel) {
+            level[node] = curLevel;
+
+            parentGrid[node][0] = parent;
+            for(ll i = 1; i < Y; i++) {
+                parentGrid[node][i] = parentGrid[parentGrid[node][i-1]][i-1];
+            }
+
+            for(ll adjNode: adjList[node]) {
+                if(adjNode != parent) {
+                    populateParentGrid(adjNode, node, curLevel + 1);
+                }
+            }
+        }
+    public:
+        LCA(ll n, vvll &adjList) {
+            this->n = n;
+            this->adjList = adjList;
+            parentGrid.assign(n + 1, vector<ll>(Y, 0));
+            level.assign(n + 1, 0);
+
+            populateParentGrid(1, 0, 0);
+        }
+
+        ll getLCA(ll u, ll v) {
+            if(level[v] > level[u]) return getLCA(v, u);
+
+            ll dist = level[u] - level[v];
+            for(ll i = 0; i < Y; i++) {
+                if(dist & (1 << i)) u = parentGrid[u][i];
+            }
+
+
+            for(ll i = Y - 1; i >= 0; i--) {
+                if(parentGrid[u][i] != parentGrid[v][i]) {
+                    u = parentGrid[u][i];
+                    v = parentGrid[v][i];
+                }
+            }
+
+            return u == v ? u : parentGrid[u][0];
+        }
+
+};
+
 
 void solve() {
-   ll t = 1;
-   cin>>t;
-   while(t--) {
-       
-   }
+    ll n, q;
+    cin >> n >> q;
+
+    vvll adjList(n + 1);
+    for(ll i = 2; i <= n; i++) {
+        ll u; cin >> u;
+        adjList[u].push_back(i);
+    }
+
+    LCA lca(n, adjList);
+    for(ll i = 1; i <= q; i++) {
+        ll a, b;
+        cin >> a >> b;
+
+        cout << lca.getLCA(a, b) << ln;
+    }
+
    //TC: O()
    //SC: O()
 }
